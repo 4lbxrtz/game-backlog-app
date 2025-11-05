@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}
