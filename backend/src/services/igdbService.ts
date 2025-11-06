@@ -27,9 +27,31 @@ async function getAccessToken(): Promise<string> {
       accessToken = null;
     }, response.data.expires_in * 1000);
 
-    return accessToken;
+    return accessToken!;
   } catch (error) {
     console.error("Error getting Twitch token:", error);
+    throw error;
+  }
+}
+
+export async function searchGames(query: string, limit: number = 10) {
+  try {
+    const token = await getAccessToken();
+
+    const response = await axios.post(
+      `${IGDB_API_URL}/games`,
+      `search "${query}"; fields name, cover.url, summary, first_release_date, genres.name, platforms.name; limit ${limit};`,
+      {
+        headers: {
+          "Client-ID": process.env.TWITCH_CLIENT_ID!,
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching games:", error);
     throw error;
   }
 }

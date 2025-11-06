@@ -16,6 +16,7 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+backend/.env
 
 # TypeScript build output caches
 *.tsbuildinfo
