@@ -8,7 +8,7 @@ const IGDB_API_URL = "https://api.igdb.com/v4";
 
 let accessToken: string | null = null;
 
-async function getAccessToken(): Promise<string> {
+export async function getAccessToken(): Promise<string> {
   if (accessToken) return accessToken;
 
   try {
@@ -23,9 +23,43 @@ async function getAccessToken(): Promise<string> {
     accessToken = response.data.access_token;
 
     // Token expires, so refresh it periodically
-    setTimeout(() => {
-      accessToken = null;
-    }, response.data.expires_in * 1000);
+    // Guard against very large values that cause Node's TimeoutOverflowWarning.
+    // Node's setTimeout maximum allowed delay is 2^31-1 ms (~24.8 days).
+    const MAX_SAFE_TIMEOUT_MS = 0x7fffffff; // 2_147_483_647
+    const expiresInSec = Number(response.data.expires_in) || 0;
+    let expiresMs = expiresInSec * 1000;
+
+    if (!Number.isFinite(expiresMs) || expiresMs <= 0) {
+      // If the API didn't return a valid expiry, fall back to 1 hour and warn.
+      console.warn(
+        "Warning: invalid expires_in from token response, using 1 hour fallback."
+      );
+      expiresMs = 60 * 60 * 1000;
+    }
+
+    // If expiresMs is larger than Node's max timeout, schedule invalidation in chunks.
+    function scheduleTokenInvalidation(remainingMs: number) {
+      if (remainingMs <= MAX_SAFE_TIMEOUT_MS) {
+        // Final chunk: invalidate after remainingMs
+        setTimeout(() => {
+          accessToken = null;
+        }, remainingMs);
+      } else {
+        // Schedule a chunk, then recursively schedule the rest when it fires.
+        setTimeout(() => {
+          // After this chunk fires, schedule the next chunk(s)
+          scheduleTokenInvalidation(remainingMs - MAX_SAFE_TIMEOUT_MS);
+        }, MAX_SAFE_TIMEOUT_MS);
+      }
+    }
+
+    if (expiresMs > MAX_SAFE_TIMEOUT_MS) {
+      console.warn(
+        `Warning: token expiry (${expiresMs}ms) exceeds Node max timeout. Scheduling invalidation in chunks of ${MAX_SAFE_TIMEOUT_MS}ms.`
+      );
+    }
+
+    scheduleTokenInvalidation(expiresMs);
 
     return accessToken!;
   } catch (error) {
@@ -52,6 +86,31 @@ export async function searchGames(query: string, limit: number = 10) {
     return response.data;
   } catch (error) {
     console.error("Error searching games:", error);
+    throw error;
+  }
+}
+
+export async function getGameDetails(igdbId: number) {
+  try {
+    const token = await getAccessToken();
+
+    const response = await axios.post(
+      `${IGDB_API_URL}/games`,
+      `where id = ${igdbId}; 
+       fields name, cover.url, summary, first_release_date, 
+              genres.id, genres.name, 
+              platforms.id, platforms.name;`,
+      {
+        headers: {
+          "Client-ID": process.env.TWITCH_CLIENT_ID!,
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data[0];
+  } catch (error) {
+    console.error("Error fetching game details:", error);
     throw error;
   }
 }

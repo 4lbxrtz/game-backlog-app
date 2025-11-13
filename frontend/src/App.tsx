@@ -1,34 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './public/vite.svg'
+import { Routes, Route, Link } from 'react-router-dom'
 import './App.css'
+import Dashboard from './views/Dashboard'
+import Game from './views/Game'
+import Register from './views/Register'
+import Login from './views/Login'
+import Search from './views/Search'
+
+function Home() {
+  return (
+    <div className="home">
+      <h1>Bienvenido a GameTracker</h1>
+      <p>Página de inicio mínima. Haz clic para ir al dashboard.</p>
+      <Link to="/dashboard">Ir al Dashboard</Link>
+      <br></br>
+      <Link to="/game">Ir a la página del juego</Link>
+      <br></br>
+      <Link to="/login">Iniciar sesión</Link>
+      <br></br>
+      <Link to="/register">Registrarse</Link>
+    </div>
+  )
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/search" element={<Search />} />
+    </Routes>
   )
 }
 

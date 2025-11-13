@@ -1,0 +1,59 @@
+/* Styles for the search view, minimal to match the app look */
+.search-container { padding: 1rem; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+
+.search-card { 
+    background: #fff; 
+    border-radius: 8px; 
+    padding: 1rem; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+}
+
+.card-header { 
+    margin-bottom: 0.75rem 
+}
+
+.game-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); 
+    gap: 1rem; margin-top: 1rem 
+}
+
+.game-card { 
+    background: #f8f8f8; 
+    padding: 0.75rem; 
+    border-radius: 6px; }
+
+.game-cover img { 
+    width: 100%; 
+    height: 120px; 
+    object-fit: cover; 
+    border-radius: 4px 
+}
+
+.no-results { 
+    color: #666; 
+    padding: 1rem 
+}
+
+.btn-search { margin-top: 0.5rem; padding: 0.5rem 1rem; border-radius: 6px; background: #111827; color: white; border: none }
+
+.search-actions { display:flex; justify-content:flex-end }
+
+        .search-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+

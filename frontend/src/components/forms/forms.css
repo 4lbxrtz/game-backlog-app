@@ -1,0 +1,33 @@
+/* Minimal form styles for inputs used in Register */
+.form-field {
+  margin-bottom: 0.75rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-input.has-error {
+  border-color: #e53e3e;
+}
+
+.form-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.password-wrapper { display: flex; align-items: center; }
+.password-toggle { margin-left: 0.5rem; background: transparent; border: none; cursor: pointer; font-size: 1.1rem }
+
+.form-field-wrapper { margin-bottom: 1rem }
