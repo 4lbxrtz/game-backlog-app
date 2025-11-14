@@ -13,7 +13,7 @@ type GameResult = {
 
 type RawGame = {
   id: number
-  name: string
+  title: string
   cover?: { url?: string } | null
   cover_url?: string | null
   summary?: string | null
@@ -24,6 +24,7 @@ export default function Search() {
   const [results, setResults] = useState<GameResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000'
 
   async function handleSearch(e?: React.FormEvent) {
     if (e) e.preventDefault()
@@ -36,11 +37,11 @@ export default function Search() {
     try {
       setLoading(true)
       // Backend endpoint expected to proxy IGDB search
-      const res = await axios.get('/api/games/search', { params: { q: query.trim() } })
+      const res = await axios.get(`${IP_BACKEND}/games/search`, { params: { q: query.trim() } })
       const data = (res.data as unknown) as RawGame[]
       const mapped: GameResult[] = (Array.isArray(data) ? data : []).map((g) => ({
         id: g.id,
-        name: g.name,
+        name: g.title,
         cover_url: g.cover?.url ?? g.cover_url ?? null,
         summary: g.summary ?? null,
       }))

@@ -29,6 +29,14 @@ export async function gameExists(igdbId: number): Promise<boolean> {
   return rows.length > 0;
 }
 
+export async function searchGamesInDatabase(query: string): Promise<Game[]> {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    "SELECT * FROM games WHERE title LIKE ? LIMIT 20",
+    [`%${query}%`]
+  );
+  return rows as Game[];
+}
+
 // Get game with all its metadata (genres, platforms)
 export async function getGameById(igdbId: number): Promise<any> {
   // Get basic game info

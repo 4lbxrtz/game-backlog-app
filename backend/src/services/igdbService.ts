@@ -68,7 +68,7 @@ export async function getAccessToken(): Promise<string> {
   }
 }
 
-export async function searchGames(query: string, limit: number = 10) {
+export async function searchIGDB(query: string, limit: number = 10) {
   try {
     const token = await getAccessToken();
 

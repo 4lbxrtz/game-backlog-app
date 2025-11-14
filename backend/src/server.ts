@@ -11,7 +11,14 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS Configuration - MUST BE BEFORE ROUTES
+const corsOptions = {
+  origin: "http://localhost:5173", // Your React app URL
+  credentials: true, // Allow cookies/auth headers
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
