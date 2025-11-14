@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration - MUST BE BEFORE ROUTES
 const corsOptions = {
-  origin: "http://localhost:5173", // Your React app URL
+  origin: ["http://localhost:5173", "http://localhost:5174"], // Your React app URL
   credentials: true, // Allow cookies/auth headers
   optionsSuccessStatus: 200,
 };
