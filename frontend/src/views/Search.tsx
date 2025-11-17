@@ -37,7 +37,7 @@ export default function Search() {
     try {
       setLoading(true)
       // Backend endpoint expected to proxy IGDB search
-      const res = await axios.get(`${IP_BACKEND}/games/search`, { params: { q: query.trim() } })
+      const res = await axios.get(`${IP_BACKEND}/api/games/search`, { params: { q: query.trim() } })
       const data = (res.data as unknown) as RawGame[]
       const mapped: GameResult[] = (Array.isArray(data) ? data : []).map((g) => ({
         id: g.id,

@@ -67,3 +67,99 @@ export async function usernameExists(username: string): Promise<boolean> {
   );
   return rows.length > 0;
 }
+
+export async function getUserStats(userId: number) {
+  // Get counts by status
+  const [statusRows] = await pool.query<RowDataPacket[]>(
+    `SELECT 
+      status,
+      COUNT(*) as count
+    FROM user_games
+    WHERE user_id = ?
+    GROUP BY status`,
+    [userId]
+  );
+
+  // Get average rating
+  const [ratingRows] = await pool.query<RowDataPacket[]>(
+    `SELECT AVG(personal_rating) as avg_rating
+    FROM user_games
+    WHERE user_id = ? AND personal_rating IS NOT NULL`,
+    [userId]
+  );
+
+  // Format the stats
+  const stats: Record<string, number> = {
+    Completed: 0,
+    Playing: 0,
+    Backlog: 0,
+    Wishlist: 0,
+    Abandoned: 0,
+  };
+
+  statusRows.forEach((row: any) => {
+    stats[row.status] = row.count;
+  });
+
+  return {
+    completed: stats.Completed,
+    playing: stats.Playing,
+    backlog: stats.Backlog,
+    wishlist: stats.Wishlist,
+    abandoned: stats.Abandoned,
+    averageRating: ratingRows[0]?.avg_rating
+      ? parseFloat(ratingRows[0].avg_rating).toFixed(1)
+      : "0.0",
+  };
+}
+
+// Get user's currently playing games
+export async function getCurrentlyPlayingGames(
+  userId: number,
+  limit: number = 3
+) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT g.id, g.title, g.cover_url
+    FROM games g
+    JOIN user_games ug ON g.id = ug.game_id
+    WHERE ug.user_id = ? AND ug.status = 'Playing'
+    ORDER BY ug.updated_at DESC
+    LIMIT ?`,
+    [userId, limit]
+  );
+
+  return rows;
+}
+
+// Get user's backlog games
+export async function getBacklogGames(userId: number, limit: number = 6) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT g.id, g.title, g.cover_url
+    FROM games g
+    JOIN user_games ug ON g.id = ug.game_id
+    WHERE ug.user_id = ? AND ug.status = 'Backlog'
+    ORDER BY ug.added_at DESC
+    LIMIT ?`,
+    [userId, limit]
+  );
+
+  return rows;
+}
+
+// Get user's custom lists
+export async function getUserLists(userId: number) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT 
+      l.id,
+      l.name,
+      l.description,
+      COUNT(lg.game_id) as game_count
+    FROM lists l
+    LEFT JOIN list_games lg ON l.id = lg.list_id
+    WHERE l.user_id = ?
+    GROUP BY l.id`,
+    [userId]
+  );
+
+  return rows;
+}

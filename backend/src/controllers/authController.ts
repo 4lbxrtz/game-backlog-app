@@ -5,6 +5,10 @@ import {
   emailExists,
   usernameExists,
   findUserById,
+  getBacklogGames,
+  getCurrentlyPlayingGames,
+  getUserLists,
+  getUserStats,
 } from "../models/userModel";
 import { hashPassword, comparePassword, generateToken } from "../utils/auth";
 import { UserRegistration, UserLogin } from "../types";
@@ -105,7 +109,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     // Generate token
     const token = generateToken({ userId: user.id, email: user.email });
 
-    res.json({
+    res.status(200).json({
       message: "Login successful",
       token,
       user: {
@@ -120,27 +124,40 @@ export async function login(req: Request, res: Response): Promise<void> {
   }
 }
 
-// Get current user (protected route)
-export async function getMe(req: Request, res: Response): Promise<void> {
+// Get user dashboard (protected route)
+export async function getDashboard(req: Request, res: Response): Promise<void> {
   try {
-    // req.user is set by authenticate middleware
     const userId = req.user!.userId;
 
+    // Get user info
     const user = await findUserById(userId);
 
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
     }
+    // Get all dashboard data in parallel (faster!)
+    const [stats, currentlyPlaying, backlog, lists] = await Promise.all([
+      getUserStats(userId),
+      getCurrentlyPlayingGames(userId, 4),
+      getBacklogGames(userId, 8),
+      getUserLists(userId),
+    ]);
 
     res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      created_at: user.created_at,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        created_at: user.created_at,
+      },
+      stats,
+      currentlyPlaying,
+      backlog,
+      lists,
     });
   } catch (error) {
-    console.error("Get user error:", error);
-    res.status(500).json({ error: "Failed to get user" });
+    console.error("Get dashboard error:", error);
+    res.status(500).json({ error: "Failed to load dashboard" });
   }
 }
