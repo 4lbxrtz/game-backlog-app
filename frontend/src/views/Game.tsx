@@ -1,6 +1,69 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { gameService } from '../services/gameService'
 import './Game.css'
 
+interface Game {
+    id: number
+    title: string
+    cover_url?: string
+    genres: string[]
+    platforms: string[]
+    release_year: number
+    description: string
+    global_rating: number
+    rating_count: number
+}
+
+
 function Game() {
+    const navigate = useNavigate()
+
+    const { id } = useParams<{ id?: string }>()
+
+    const [game, setGame] = useState<Game | null>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchGame() {
+            if (!id) {
+                setLoading(false)
+                return
+            }
+
+            try {
+                const gameData = await gameService.getById(Number(id))
+                setGame(gameData)
+            } catch (error) {
+                console.error('Error loading game data:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchGame()
+    }, [id])
+
+    if (loading) {
+        return <div>Cargando...</div>
+    }
+
+    if (!game) {
+        return <div>Juego no encontrado.</div>
+    }
+
+    async function handleAddToCollection(estado: string) {
+        try {
+
+            await gameService.addToCollection(game.id, estado)
+            alert(`Juego añadido a tu colección como "${estado}".`)
+        } catch (error) {
+            console.error('Error añadiendo juego a la colección:', error)
+            alert('Error al añadir el juego a la colección.')
+        }
+    }
+
     return (
     <div className="container">
         <header>
@@ -8,12 +71,12 @@ function Game() {
                 <span className="logo-icon">🎮</span>
                 <span>GameTracker</span>
             </a>
-            <button className="back-button">← Volver</button>
+            <button className="back-button" onClick={() => navigate('/dashboard')}>← Volver</button>
         </header>
 
         <div className="game-hero">
             <div className="cover-section">
-                <div className="game-cover-large">Portada</div>
+                <div className="game-cover"><img src={game?.cover_url} alt={game?.title} /></div>
                 <div className="my-rating-box">
                     <div className="rating-display">
                         <div className="rating-label">Tu valoración</div>
@@ -21,19 +84,19 @@ function Game() {
                         <div className="stars">★★★★★</div>
                     </div>
                     <div className="status-selector">
-                        <div className="status-option">
+                        <div className="status-option" onClick={() => handleAddToCollection('Wishlist')}>
                             <div className="status-icon">📋</div>
                             <div className="status-label">Wishlist</div>
                         </div>
-                        <div className="status-option">
+                        <div className="status-option" onClick={() => handleAddToCollection('Backlog')}>
                             <div className="status-icon">📚</div>
                             <div className="status-label">Backlog</div>
                         </div>
-                        <div className="status-option active">
+                        <div className="status-option active" onClick={() => handleAddToCollection('Playing')}>
                             <div className="status-icon">🎮</div>
                             <div className="status-label">Jugando</div>
                         </div>
-                        <div className="status-option">
+                        <div className="status-option" onClick={() => handleAddToCollection('Completed')}>
                             <div className="status-icon">✓</div>
                             <div className="status-label">Completado</div>
                         </div>
@@ -41,15 +104,14 @@ function Game() {
                 </div>
             </div>
             <div className="game-info">
-                <h1 className="game-title-main">Hollow Knight</h1>
+                <h1 className="game-title-main">{game?.title}</h1>
                 <div className="game-meta">
-                    <span className="meta-item">🎮 Metroidvania</span>
-                    <span className="meta-item">🎯 Acción</span>
-                    <span className="meta-item">🖥️ PC, Switch, PS4</span>
-                    <span className="meta-item">📅 2017</span>
+                    <span className="meta-item">{game?.genres.map((genre) => genre.name).join(', ')}</span>
+                    <span className="meta-item">{game?.platforms.map((platform) => platform.name).join(', ')}</span>
+                    <span className="meta-item">Estreno: {game?.release_date.substring(0, 4)}</span>
                 </div>
                 <p className="game-description">
-                    Forja tu propio camino en Hollow Knight, una aventura de acción épica a través de un vasto reino en ruinas de insectos y héroes. Explora cavernas serpenteantes, ciudades antiguas y páramos mortíferos. Lucha contra criaturas corrompidas, hazte amigo de bichos extraños y resuelve antiguos misterios en el corazón del reino.
+                    {game?.description}
                 </p>
                 <div className="ratings-section">
                     <div className="global-rating-header">

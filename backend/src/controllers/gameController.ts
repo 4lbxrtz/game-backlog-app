@@ -6,6 +6,7 @@ import {
   storeGameMetadata,
   getGameById,
 } from "../models/gameModel";
+import { insertGameIntoCollection, updateGameStatus } from "../models/userModel";
 
 // Search games from IGDB (no database storage yet)
 export async function searchGamesController(req: Request, res: Response) {
@@ -74,11 +75,12 @@ export async function getGameController(req: Request, res: Response) {
   }
 }
 
-/**
+
 // Add game to user's collection
 export async function addGameToCollectionController(req: Request, res: Response) {
   try {
-    const userId = req.user.id; // From auth middleware (we'll add this later)
+
+    const userId = req.user!.userId;
     const { igdbId, status } = req.body;
     
     // Ensure game metadata is in database
@@ -87,16 +89,28 @@ export async function addGameToCollectionController(req: Request, res: Response)
     if (!exists) {
       // Fetch and store game metadata first
       const igdbGame = await getGameDetails(igdbId);
+      if (!igdbGame) {
+        return res.status(404).json({ error: 'Game not found in IGDB' });
+      }
       await storeGameMetadata(igdbGame);
     }
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required to add game to collection' });
+    }
+
+    if (!igdbId) {
+      return res.status(400).json({ error: 'igdbId is required to add game to collection' });
+    }
+
+    const validStatuses = ['Playing', 'Completed', 'Wishlist', 'Backlog', 'Abandoned'];
     
-    // Add to user's collection
-    await pool.query(
-      `INSERT INTO user_games (user_id, game_id, status)
-       VALUES (?, ?, ?)
-       ON DUPLICATE KEY UPDATE status = VALUES(status)`,
-      [userId, igdbId, status || 'Backlog']
-    );
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value' });
+    }
+
+    // Now add to user's collection
+    await insertGameIntoCollection(userId, igdbId, status);
     
     res.json({ message: 'Game added to collection' });
     
@@ -105,4 +119,3 @@ export async function addGameToCollectionController(req: Request, res: Response)
     res.status(500).json({ error: 'Failed to add game to collection' });
   }
 }
-  */

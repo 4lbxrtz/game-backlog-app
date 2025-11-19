@@ -10,7 +10,10 @@ export const gameService = {
 
   async getById(gameId: number) {
     const response = await api.get(`/api/games/${gameId}`);
-    return response.data;
+    const data = response.data;
+    // Backend returns { source: 'database'|'igdb', game: {...} }
+    // Normalize to return the inner game object when present
+    return data && data.game ? data.game : data;
   },
 
   async addToCollection(gameId: number, status: string) {

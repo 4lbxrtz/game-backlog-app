@@ -13,7 +13,7 @@ function Home() {
       <p>Página de inicio mínima. Haz clic para ir al dashboard.</p>
       <Link to="/dashboard">Ir al Dashboard</Link>
       <br></br>
-      <Link to="/game">Ir a la página del juego</Link>
+      <Link to="/game/1">Ir a la página del juego (ejemplo)</Link>
       <br></br>
       <Link to="/login">Iniciar sesión</Link>
       <br></br>
@@ -27,7 +27,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/game" element={<Game />} />
+      <Route path="/game/:id" element={<Game />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/search" element={<Search />} />

@@ -163,3 +163,29 @@ export async function getUserLists(userId: number) {
 
   return rows;
 }
+
+export async function insertGameIntoCollection(
+  userId: number,
+  gameId: number,
+  status: string
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO user_games (user_id, game_id, status, added_at, updated_at)
+    VALUES (?, ?, ?, NOW(), NOW())
+    ON DUPLICATE KEY UPDATE status = ?, updated_at = NOW()`,
+    [userId, gameId, status, status]
+  );
+}
+
+export async function updateGameStatus(
+  userId: number,
+  gameId: number,
+  status: string
+): Promise<void> {
+  await pool.query(
+    `UPDATE user_games
+    SET status = ?, updated_at = NOW()
+    WHERE user_id = ? AND game_id = ?`,
+    [status, userId, gameId]
+  );
+}

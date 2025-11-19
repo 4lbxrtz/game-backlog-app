@@ -1,5 +1,7 @@
 import express from "express";
-import { searchGamesController } from "../controllers/gameController";
+import { addGameToCollectionController, searchGamesController } from "../controllers/gameController";
+import { getGameController as getGameController } from "../controllers/gameController";
+import { authenticate } from "../middleware/auth";
 
 const router = express.Router();
 
@@ -16,5 +18,7 @@ router.use((req, res, next) => {
 });
 
 router.get("/search", searchGamesController);
+router.get("/:id", getGameController);
+router.post("/collection", authenticate, addGameToCollectionController);
 
 export default router;

@@ -2,12 +2,18 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "vitest"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/argon2": "^0.14.1",
     "@types/jsonwebtoken": "^9.0.10",
-    "ts-node": "^10.9.2"
+    "jsdom": "^27.2.0",
+    "ts-node": "^10.9.2",
+    "vitest": "^4.0.10"
   },
   "dependencies": {
     "argon2": "^0.44.0",

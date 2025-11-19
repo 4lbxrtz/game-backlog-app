@@ -3,6 +3,7 @@ import '../components/forms/forms.css'
 import { useState } from 'react'
 import axios from 'axios'
 import TextInput from '../components/forms/TextInput'
+import { Link } from 'react-router-dom'
 
 type GameResult = {
   id: number
@@ -94,7 +95,7 @@ export default function Search() {
           <div className="game-grid">
             {results.map((g) => (
               <div key={g.id} className="game-card">
-                <div className="game-cover">{g.cover_url ? <img src={g.cover_url} alt={g.name} /> : 'Portada'}</div>
+                <Link to={`/game/${g.id}`}><div className="game-cover">{g.cover_url ? <img src={g.cover_url} alt={g.name} /> : 'Portada'}</div> </Link>
                 <div className="game-title">{g.name}</div>
                 {g.summary && <div className="game-summary">{g.summary.slice(0, 120)}{g.summary.length > 120 ? '…' : ''}</div>}
               </div>
