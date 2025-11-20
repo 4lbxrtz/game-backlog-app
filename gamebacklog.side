@@ -1,0 +1,242 @@
+{
+  "id": "4a90e07e-a039-470f-9179-77771771a8ab",
+  "version": "2.0",
+  "name": "gamebacklog",
+  "url": "http://wassanga.duckdns.org:8080/",
+  "tests": [{
+    "id": "5bb59a22-8e49-481a-9001-66e9cfd0ca83",
+    "name": "login",
+    "commands": [{
+      "id": "654b9d8b-2e8b-4f3f-92e6-798f991cc6aa",
+      "comment": "",
+      "command": "open",
+      "target": "/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0df73e5b-f01c-4095-84f3-4912ace84d62",
+      "comment": "",
+      "command": "type",
+      "target": "id=email",
+      "targets": [],
+      "value": "prueba@gmail.com"
+    }, {
+      "id": "51288fce-2f21-423b-8990-dd365283ac57",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "123456789"
+    }, {
+      "id": "907b2c92-6978-453b-a845-a30e1889e36a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-login",
+      "targets": [
+        ["css=.btn-login", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/button", "xpath:idRelative"],
+        ["xpath=//form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Iniciar sesión')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1bd984f2-d3f8-4823-b6d5-c35119b9bd68",
+      "comment": "",
+      "command": "",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "89ce117b-d070-4457-b41c-2aa1ecb1f796",
+    "name": "logout",
+    "commands": [{
+      "id": "14b6810d-e030-46af-843a-935c80871ec9",
+      "comment": "",
+      "command": "open",
+      "target": "/dashboard",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "95e696f4-666c-4db8-bae7-7b86d8c76bf9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.avatar",
+      "targets": [
+        ["css=.avatar", "css:finder"],
+        ["xpath=//div[@id='root']/div/header/div[2]/div", "xpath:idRelative"],
+        ["xpath=//div[2]/div", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "dc04748b-6feb-47e0-804a-264d57692178",
+    "name": "addGame",
+    "commands": [{
+      "id": "f86527d6-de9c-4ecc-9ed8-663b0fe9ea16",
+      "comment": "",
+      "command": "open",
+      "target": "/dashboard",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "eef9084c-d5dc-47da-97d6-0a196814a80f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.add-button",
+      "targets": [
+        ["css=.add-button", "css:finder"],
+        ["xpath=//div[@id='root']/div/header/div[2]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Añadir juego')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2e458201-ce9b-4836-b287-3e982a04a1a4",
+      "comment": "",
+      "command": "type",
+      "target": "id=q",
+      "targets": [
+        ["id=q", "id"],
+        ["name=q", "name"],
+        ["css=#q", "css:finder"],
+        ["xpath=//input[@id='q']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "zelda"
+    }, {
+      "id": "0b5bdf72-3549-463a-95ac-b7653dea68a5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.search-button",
+      "targets": [
+        ["css=.search-button", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/div[2]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Buscar')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "18fe6104-c6d0-4c3c-8455-42510736981c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.game-card:nth-child(1) img",
+      "targets": [
+        ["css=.game-card:nth-child(1) img", "css:finder"],
+        ["xpath=//img[@alt='The Legend of Zelda: Skyward Sword']", "xpath:img"],
+        ["xpath=//div[@id='root']/div/div[2]/div[2]/div/div/a/div/img", "xpath:idRelative"],
+        ["xpath=//a/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8c31c905-f45d-4a89-a337-51ddbdb10f2c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.active",
+      "targets": [
+        ["css=.active", "css:finder"],
+        ["xpath=//div[@id='root']/div/div/div/div[2]/div[2]/div[3]", "xpath:idRelative"],
+        ["xpath=//div[2]/div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "16c9bc53-cc11-49e9-b933-4aa531d299f8",
+      "comment": "",
+      "command": "open",
+      "target": "/dashboard",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6d2dae7e-1001-4347-a927-05eca2323d44",
+      "comment": "",
+      "command": "waitForElementPresent",
+      "target": "css=.game-title",
+      "targets": [],
+      "value": "1000"
+    }, {
+      "id": "b354c605-c55e-4e72-b38a-cc22fea53c9b",
+      "comment": "",
+      "command": "verifyText",
+      "target": "xpath=//div[contains(@class,'game-card')]//*[contains(text(), 'Skyward Sword')]",
+      "targets": [],
+      "value": "The Legend of Zelda: Skyward Sword"
+    }]
+  }, {
+    "id": "3c149f37-215f-4e4e-8757-c38d001f9077",
+    "name": "searchGame",
+    "commands": [{
+      "id": "b149dc34-686a-42d5-991f-53e984db99e8",
+      "comment": "",
+      "command": "open",
+      "target": "/search",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "150c9f00-4a1b-4cc3-93d9-6dcbc58e1213",
+      "comment": "",
+      "command": "type",
+      "target": "id=q",
+      "targets": [
+        ["id=q", "id"],
+        ["name=q", "name"],
+        ["css=#q", "css:finder"],
+        ["xpath=//input[@id='q']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Ricky Raccoon"
+    }, {
+      "id": "17b71863-c7a0-4d73-ac03-14942a339175",
+      "comment": "",
+      "command": "click",
+      "target": "css=.search-button",
+      "targets": [
+        ["css=.search-button", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//div[@id='root']/div/div[2]/form/div[2]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Buscar')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "516c407b-4c81-429f-95f2-da912bbe85cb",
+      "comment": "",
+      "command": "click",
+      "target": "xpath=//img[@alt='Ricky Raccoon']",
+      "targets": [
+        ["css=.game-card:nth-child(1) img", "css:finder"],
+        ["xpath=//img[@alt='Ricky Raccoon']", "xpath:img"],
+        ["xpath=//div[@id='root']/div/div[2]/div[2]/div/div/a/div/img", "xpath:idRelative"],
+        ["xpath=//a/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "90c66aee-9a63-4ca9-b1c8-3c43e604a7b4",
+      "comment": "",
+      "command": "verifyText",
+      "target": "css=.game-description",
+      "targets": [],
+      "value": "Little Ricky Raccoon joins his grandpa's treasure hunt at the Amazon River!"
+    }]
+  }],
+  "suites": [{
+    "id": "500f5ebf-263b-4aa1-9e8f-bc158ea2bad2",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["5bb59a22-8e49-481a-9001-66e9cfd0ca83", "3c149f37-215f-4e4e-8757-c38d001f9077", "dc04748b-6feb-47e0-804a-264d57692178", "89ce117b-d070-4457-b41c-2aa1ecb1f796"]
+  }],
+  "urls": ["https://wassanga.duckdns.org:8080/", "http://wassanga.duckdns.org:8080/"],
+  "plugins": []
+}
