@@ -66,7 +66,7 @@ export default function Register() {
                 password 
             }
             
-            const response = await axios.post(`${IP_BACKEND}/auth/register`, payload)
+            const response = await axios.post(`${IP_BACKEND}/api/auth/register`, payload)
             
             // Guardar token en localStorage
             const { token, user } = response.data

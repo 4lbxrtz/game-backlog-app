@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import TextInput from '../components/forms/TextInput'
 import PasswordInput from '../components/forms/PasswordInput'
+import { authService } from '../services/authService'
 
-const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000';
+// const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000';
 
 function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -45,16 +46,11 @@ export default function Login() {
         try {
             setLoading(true)
             
-            const payload = { 
-                email: email.trim(), 
-                password 
-            }
-            
-            const response = await axios.post(`${IP_BACKEND}/api/auth/login`, payload)
+            // const response =  await authService.login(email.trim(), password)
+            // const response = await axios.post(`${IP_BACKEND}/api/auth/login`, { email: email.trim(), password })
+            const { token, user } = await authService.login(email.trim(), password)
             
             // Guardar token y usuario
-            const { token, user } = response.data
-            
             if (rememberMe) {
                 localStorage.setItem('token', token)
                 localStorage.setItem('user', JSON.stringify(user))
