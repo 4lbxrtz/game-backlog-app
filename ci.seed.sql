@@ -62,7 +62,7 @@ CREATE TABLE user_games (
 -- Logs/Sessions table
 CREATE TABLE logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_game_id INT NOT NULL,
+    user_id INT NOT NULL,
     game_id INT NOT NULL,
     platform_id INT,
     time_played INT,  -- in minutes
@@ -71,10 +71,8 @@ CREATE TABLE logs (
     review TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_game_id) REFERENCES user_games(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (game_id) REFERENCES user_games(game_id) ON DELETE CASCADE,
-    FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE SET NULL,
-    INDEX idx_user_game (user_game_id)
+    FOREIGN KEY (user_id, game_id) REFERENCES user_games(user_id, game_id) ON DELETE CASCADE,
+    FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE SET NULL
 );
 
 -- Custom lists
@@ -98,7 +96,6 @@ CREATE TABLE list_games (
 -- Indexes for performance
 CREATE INDEX idx_user_games_user ON user_games(user_id);
 CREATE INDEX idx_user_games_status ON user_games(status);
-CREATE INDEX idx_logs_user_game ON logs(user_game_id);
 
 insert into games (id, title, cover_url, description, release_date) values
 (34666, 'Ricky Raccoon', '//images.igdb.com/igdb/image/upload/t_cover_big_2x/co8eys.jpg', "Little Ricky Raccoon joins his grandpa's treasure hunt at the Amazon River!", '2017-05-23'),
