@@ -10,6 +10,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: gamebacklog_db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,6 +35,19 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
+
+      # ----- ENV VARIABLES FOR BACKEND -----
+      - name: Create .env file for backend
+        run: |
+          echo "DB_HOST=127.0.0.1" >> backend/.env
+          echo "DB_USER=user" >> backend/.env
+          echo "DB_PASSWORD=password" >> backend/.env
+          echo "DB_DATABASE=mydb" >> backend/.env
+          echo "DB_PORT=3306" >> backend/.env
+      
+      # ----- SEED DATABASE -----
+      - name: Seed database
+        run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
 
       - name: Install root dependencies
         run: npm ci
@@ -37,18 +66,18 @@ jobs:
       - name: Run unit tests (backend + frontend)
         run: npm run test
 
-      # ---------- START BACKEND + FRONTEND SERVER ----------
-      - name: Start backend & production preview
-        run: |
-          npm run start
+      # ---------- START BACKEND & FRONTEND ----------
+      - name: Start backend & frontend concurrently
+        run: npm run start &
         shell: bash
 
-      - name: Wait for services
+      - name: Wait for servers
         run: |
           npx wait-on http://localhost:5173
           npx wait-on http://localhost:5000
 
-      # # ---------- SELENIUM ----------
+      # ---------- SELENIUM ----------
+      # (Uncomment when ready)
       # - name: Start Selenium (Chrome)
       #   run: |
       #     docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
@@ -56,5 +85,5 @@ jobs:
       # - name: Run E2E tests
       #   env:
       #     FRONTEND_URL: http://localhost:5173
-      #     BACKEND_URL: http://localhost:YOUR_BACKEND_PORT
+      #     BACKEND_URL: http://localhost:5000
       #   run: npm run test:e2e
