@@ -7,8 +7,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node", "vitest/globals", "@testing-library/jest-dom"],
-    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "vitest", "@testing-library/jest-dom"],
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "tests", "src/**/*.test.ts", "src/**/*.spec.ts"]
+  "include": ["src", "tests", "src/**/*.test.ts", "src/**/*.spec.ts"],
+  "exclude": ["node_modules", "dist"]
 }

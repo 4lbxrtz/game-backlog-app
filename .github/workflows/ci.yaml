@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      # ---------- UNIT TESTS ----------
+      - name: Run unit tests (backend + frontend)
+        run: npm run test
+
+      # ---------- START BACKEND + FRONTEND SERVER ----------
+      - name: Start backend & production preview
+        run: |
+          npm run start
+        shell: bash
+
+      - name: Wait for services
+        run: |
+          npx wait-on http://localhost:5173
+          npx wait-on http://localhost:5000
+
+      # # ---------- SELENIUM ----------
+      # - name: Start Selenium (Chrome)
+      #   run: |
+      #     docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
+
+      # - name: Run E2E tests
+      #   env:
+      #     FRONTEND_URL: http://localhost:5173
+      #     BACKEND_URL: http://localhost:YOUR_BACKEND_PORT
+      #   run: npm run test:e2e

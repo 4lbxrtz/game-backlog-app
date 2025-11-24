@@ -69,7 +69,7 @@ function extractText(node: ReactElementLike): string {
 // Helper to "render" the component using mocked hooks and preserve state between renders.
 function renderMock(props: Record<string, any>) {
   stateCursor = 0; // reset cursor before each render so hooks use consistent indices
-  return PasswordInput(props);
+  return PasswordInput(props as any);
 }
 
 describe("PasswordInput (non-DOM, mocked hooks)", () => {

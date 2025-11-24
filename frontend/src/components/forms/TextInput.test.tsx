@@ -124,7 +124,7 @@ describe("TextInput", () => {
     expect(input).toBeDefined();
 
     // className may be a string containing an error class
-    expect((input.props.className ?? "")).toContain("error" || "has-error");
+    expect((input.props.className ?? "")).toContain("error");
 
     expect(String(input.props["aria-invalid"])).toBe("true");
     expect(input.props["aria-describedby"]).toBe("title-error");

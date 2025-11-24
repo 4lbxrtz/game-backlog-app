@@ -8,9 +8,10 @@ interface Game {
     id: number
     title: string
     cover_url?: string
-    genres: string[]
-    platforms: string[]
+    genres: { id?: number; name: string }[]
+    platforms: { id?: number; name: string }[]
     release_year: number
+    release_date?: string
     description: string
     global_rating: number
     rating_count: number
@@ -55,7 +56,9 @@ function Game() {
 
     async function handleAddToCollection(estado: string) {
         try {
-
+            if (game === null) {
+                throw new Error('Juego no disponible.')
+            }
             await gameService.addToCollection(game.id, estado)
             alert(`Juego añadido a tu colección como "${estado}".`)
         } catch (error) {
@@ -108,7 +111,7 @@ function Game() {
                 <div className="game-meta">
                     <span className="meta-item">{game?.genres.map((genre) => genre.name).join(', ')}</span>
                     <span className="meta-item">{game?.platforms.map((platform) => platform.name).join(', ')}</span>
-                    <span className="meta-item">Estreno: {game?.release_date.substring(0, 4)}</span>
+                    <span className="meta-item">{game?.release_date}</span>
                 </div>
                 <p className="game-description">
                     {game?.description}
