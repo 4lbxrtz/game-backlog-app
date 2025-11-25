@@ -6,5 +6,5 @@
   ],
   "compilerOptions": {
     "types": ["node", "vitest/globals", "@testing-library/jest-dom"],
-  }
+  }, "exclude": ["node_modules", "dist", "./src/test/e2e" ]
 }

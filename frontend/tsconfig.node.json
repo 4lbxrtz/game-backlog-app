@@ -23,5 +23,6 @@
     "noUncheckedSideEffectImports": true
     
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts"],
+  "exclude": ["./src/test/e2e"]
 }

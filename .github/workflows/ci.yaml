@@ -44,7 +44,7 @@ jobs:
           echo "DB_PASSWORD=password" >> backend/.env
           echo "DB_DATABASE=mydb" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
-      
+
       # ----- SEED DATABASE -----
       - name: Seed database
         run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
@@ -62,28 +62,16 @@ jobs:
           cd frontend
           npm ci
 
-      # ---------- UNIT TESTS ----------
-      - name: Run unit tests (backend + frontend)
-        run: npm run test
-
       # ---------- START BACKEND & FRONTEND ----------
       - name: Start backend & frontend concurrently
         run: npm run start &
         shell: bash
+      
+      # ----- STEP 3: WAIT FOR SERVERS -----
+      # We use npx wait-on to ensure localhost:5173 and :5000 are ready
+      - name: Wait for servers to be ready
+        run: npx wait-on http://localhost:5173 http://localhost:5000 --timeout 60000
 
-      - name: Wait for servers
-        run: |
-          npx wait-on http://localhost:5173
-          npx wait-on http://localhost:5000
-
-      # ---------- SELENIUM ----------
-      # (Uncomment when ready)
-      # - name: Start Selenium (Chrome)
-      #   run: |
-      #     docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:latest
-
-      # - name: Run E2E tests
-      #   env:
-      #     FRONTEND_URL: http://localhost:5173
-      #     BACKEND_URL: http://localhost:5000
-      #   run: npm run test:e2e
+      # ---------- UNIT TESTS ----------
+      - name: Run unit tests (backend + frontend)
+        run: npm run test
