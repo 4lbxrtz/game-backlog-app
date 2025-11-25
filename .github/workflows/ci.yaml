@@ -16,10 +16,10 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: marcial1234
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: gamebacklog_db
           MYSQL_USER: user
-          MYSQL_PASSWORD: marcial1234
+          MYSQL_PASSWORD: password
         options: >-
           --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
@@ -52,7 +52,7 @@ jobs:
           echo "VITE_APP_API_URL=http://127.0.0.1:5000" >> frontend/.env
 
       - name: Seed database
-        run: mysql -h 127.0.0.1 -u root -ppassword gamebacklog_db < ci.seed.sql
+        run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
 
       - name: Install root dependencies
         run: npm ci
