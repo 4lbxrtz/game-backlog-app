@@ -52,7 +52,7 @@ jobs:
           echo "VITE_APP_API_URL=http://127.0.0.1:5000" >> frontend/.env
 
       - name: Seed database
-        run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
+        run: mysql -h 127.0.0.1 -u root -ppassword gamebacklog_db < ci.seed.sql
 
       - name: Install root dependencies
         run: npm ci
