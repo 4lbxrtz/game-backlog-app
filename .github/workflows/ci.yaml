@@ -36,8 +36,8 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      # ----- ENV VARIABLES FOR BACKEND -----
-      # FIX: Changed DB_DATABASE from 'mydb' to 'gamebacklog_db' to match the service
+      # ----- ENV VARIABLES -----
+      # CHANGE 1: Use 127.0.0.1 instead of localhost to prevent IPv6 errors
       - name: Create .env file for backend
         run: |
           echo "DB_HOST=127.0.0.1" >> backend/.env
@@ -46,12 +46,11 @@ jobs:
           echo "DB_DATABASE=gamebacklog_db" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
       
+      # CHANGE 2: Force Frontend to talk to Backend via 127.0.0.1
       - name: Create .env file for frontend
         run: |
-          # If your app uses VITE_API_URL, set it here
-          echo "VITE_APP_API_URL=http://localhost:5000" >> frontend/.env
+          echo "VITE_APP_API_URL=http://127.0.0.1:5000" >> frontend/.env
 
-      # ----- SEED DATABASE -----
       - name: Seed database
         run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
 
@@ -71,17 +70,23 @@ jobs:
       - name: Install wait-on utility
         run: npm install -g wait-on
 
-      # ---------- START BACKEND & FRONTEND ----------
+      # ----- START SERVERS -----
+      # CHANGE 3: Pipe output to a log file so we can debug if it fails
       - name: Start backend & frontend concurrently
-        run: npm run start &
+        run: npm run start > combined.log 2>&1 &
         shell: bash
 
-      # ----- STEP 3: WAIT FOR SERVERS -----
-      # FIX: Changed http:// to tcp:
-      # This checks if the PORT is open, ignoring 404s/401s which causes timeouts
+      # ----- WAIT FOR SERVERS -----
+      # Check 127.0.0.1 explicitly
       - name: Wait for servers to be ready
-        run: wait-on tcp:5173 tcp:5000 --timeout 60000
+        run: wait-on tcp:127.0.0.1:5173 tcp:127.0.0.1:5000 --timeout 60000
 
-      # ---------- UNIT + E2E TESTS ----------
+      # ----- RUN TESTS -----
       - name: Run unit tests (backend + frontend)
         run: npm run test
+
+      # ----- DEBUGGING -----
+      # CHANGE 4: If tests fail, print the server logs to the console
+      - name: Print Server Logs on Failure
+        if: failure()
+        run: cat combined.log
