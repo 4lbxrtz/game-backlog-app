@@ -65,14 +65,15 @@ jobs:
       - name: Install wait-on utility
         run: npm install -g wait-on
       
-      # ----- STEP 3: WAIT FOR SERVERS -----
-      - name: Wait for servers to be ready
-        run: wait-on http://localhost:5173 http://localhost:5000 --timeout 60000
 
       # ---------- START BACKEND & FRONTEND ----------
       - name: Start backend & frontend concurrently
         run: npm run start &
         shell: bash
+      
+      # ----- STEP 3: WAIT FOR SERVERS -----
+      - name: Wait for servers to be ready
+        run: wait-on http://localhost:5173 http://localhost:5000 --timeout 60000
 
       # ---------- UNIT TESTS ----------
       - name: Run unit tests (backend + frontend)
