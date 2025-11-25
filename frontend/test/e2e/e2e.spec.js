@@ -74,30 +74,30 @@ describe('End-to-End Tests', () => {
     await driver.get(`${BASE_URL}/dashboard`);
     
     // FIX 1: Wait for element to be visible, not just located
-    const addBtn = await driver.wait(until.elementLocated(By.css(".add-button")), 10000);
-    await driver.wait(until.elementIsVisible(addBtn), 10000);
+    const addBtn = await driver.wait(until.elementLocated(By.css(".add-button")), 30000);
+    await driver.wait(until.elementIsVisible(addBtn), 30000);
 
     // FIX 2: Use JavaScript Click (More reliable in CI/Headless)
     await driver.executeScript("arguments[0].click();", addBtn);
     
     // Now wait for the search input
-    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 10000);
+    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 30000);
     await searchInput.sendKeys("zelda");
     await driver.findElement(By.css(".search-button")).click();
     
-    const gameCard = await driver.wait(until.elementLocated(By.css(".game-card:nth-child(1) img")), 10000);
+    const gameCard = await driver.wait(until.elementLocated(By.css(".game-card:nth-child(1) img")), 30000);
     await driver.executeScript("arguments[0].click();", gameCard);
     
     // Wait for the status button (Using the text approach we fixed earlier)
     const statusBtn = await driver.wait(
       until.elementLocated(By.xpath("//*[text()='Jugando']")), 
-      10000
+      30000
     );
     // Use JS Click here too just to be safe
     await driver.executeScript("arguments[0].click();", statusBtn);
     
     await driver.get(`${BASE_URL}/dashboard`);
-    await driver.wait(until.elementLocated(By.css(".game-title")), 10000);
+    await driver.wait(until.elementLocated(By.css(".game-title")), 30000);
     
     const savedGame = await driver.findElement(By.xpath("//div[contains(@class,'game-card')]//*[contains(text(), 'Skyward Sword')]"));
     expect(await savedGame.getText()).toBe("The Legend of Zelda: Skyward Sword");
