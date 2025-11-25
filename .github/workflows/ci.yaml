@@ -16,10 +16,10 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: marcial1234
           MYSQL_DATABASE: gamebacklog_db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
+          MYSQL_USER: root
+          MYSQL_PASSWORD: marcial1234
         options: >-
           --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
@@ -41,9 +41,9 @@ jobs:
       - name: Create .env file for backend
         run: |
           echo "DB_HOST=127.0.0.1" >> backend/.env
-          echo "DB_USER=user" >> backend/.env
+          echo "DB_USER=root" >> backend/.env
           echo "DB_PASSWORD=password" >> backend/.env
-          echo "DB_DATABASE=gamebacklog_db" >> backend/.env
+          echo "DB_NAME=gamebacklog_db" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
       
       # CHANGE 2: Force Frontend to talk to Backend via 127.0.0.1
@@ -52,7 +52,7 @@ jobs:
           echo "VITE_APP_API_URL=http://127.0.0.1:5000" >> frontend/.env
 
       - name: Seed database
-        run: mysql -h 127.0.0.1 -u user -ppassword gamebacklog_db < ci.seed.sql
+        run: mysql -h 127.0.0.1 -u root -ppassword gamebacklog_db < ci.seed.sql
 
       - name: Install root dependencies
         run: npm ci
