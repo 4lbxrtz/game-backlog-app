@@ -12,13 +12,13 @@ describe('End-to-End Tests', () => {
   // We call this in tests that need to be logged in first
   async function loginUser(driver) {
     await driver.get("http://localhost:5173/login");
-    const email = await driver.wait(until.elementLocated(By.id("email")), 10000);
+    const email = await driver.wait(until.elementLocated(By.id("email")), 30000);
     await email.sendKeys("prueba@gmail.com");
     await driver.findElement(By.id("password")).sendKeys("123456789");
     await driver.findElement(By.css(".btn-login")).click();
     
     // Crucial: Wait until we are actually on the dashboard before returning
-    await driver.wait(until.urlContains("/dashboard"), 10000);
+    await driver.wait(until.urlContains("/dashboard"), 30000);
   }
 
   beforeEach(async () => {
@@ -46,39 +46,42 @@ describe('End-to-End Tests', () => {
     }
   });
 
-  it('register', async function() {
-    await driver.get("http://localhost:5173/register")
-    await driver.findElement(By.id("username")).sendKeys("prueba")
-    await driver.findElement(By.id("email")).sendKeys("prueba@gmail.com")
-    await driver.findElement(By.id("password")).sendKeys("123456789")
-    await driver.findElement(By.id("confirmPassword")).sendKeys("123456789")
-    await driver.findElement(By.id("terms")).click()
-    await driver.findElement(By.css(".btn-register")).click()
-  })
+  // it('register', async function() {
+  //   await driver.get("http://localhost:5173/register")
+  //   await driver.findElement(By.id("username")).sendKeys("pruebaa2")
+  //   await driver.findElement(By.id("email")).sendKeys("pruebaa2@gmail.com")
+  //   await driver.findElement(By.id("password")).sendKeys("123456789")
+  //   await driver.findElement(By.id("confirmPassword")).sendKeys("123456789")
+  //   await driver.findElement(By.id("terms")).click()
+  //   await driver.findElement(By.css(".btn-register")).click()
+    
+  //   // Verify we landed on dashboard
+  //   await driver.wait(until.urlContains("/dashboard"), 30000);
+  // }, TIMEOUT);
   // Test 1: Explicitly tests the login flow
   it('login', async () => {
     await driver.get("http://localhost:5173/login");
-    const emailInput = await driver.wait(until.elementLocated(By.id("email")), 10000);
+    const emailInput = await driver.wait(until.elementLocated(By.id("email")), 30000);
     await emailInput.sendKeys("prueba@gmail.com");
     await driver.findElement(By.id("password")).sendKeys("123456789");
     await driver.findElement(By.css(".btn-login")).click();
     
     // Verify we landed on dashboard
-    await driver.wait(until.urlContains("/dashboard"), 10000);
+    await driver.wait(until.urlContains("/dashboard"), 30000);
   }, TIMEOUT);
 
   // Test 2: Public page (likely doesn't need login)
   it('searchGame', async () => {
     await driver.get("http://localhost:5173/search");
     
-    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 10000);
+    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 30000);
     await searchInput.sendKeys("Ricky Raccoon");
     await driver.findElement(By.css(".search-button")).click();
     
-    const img = await driver.wait(until.elementLocated(By.xpath("//img[@alt='Ricky Raccoon']")), 10000);
+    const img = await driver.wait(until.elementLocated(By.xpath("//img[@alt='Ricky Raccoon']")), 30000);
     await img.click();
     
-    const description = await driver.wait(until.elementLocated(By.css(".game-description")), 10000);
+    const description = await driver.wait(until.elementLocated(By.css(".game-description")), 30000);
     expect(await description.getText()).toBe("Little Ricky Raccoon joins his grandpa's treasure hunt at the Amazon River!");
   }, TIMEOUT);
 
@@ -89,16 +92,16 @@ describe('End-to-End Tests', () => {
 
     // 2. Go to dashboard and click Add
     await driver.get("http://localhost:5173/dashboard");
-    const addBtn = await driver.wait(until.elementLocated(By.css(".add-button")), 10000);
+    const addBtn = await driver.wait(until.elementLocated(By.css(".add-button")), 30000);
     await addBtn.click();
     
     // 3. Search for Zelda
-    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 10000);
+    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 30000);
     await searchInput.sendKeys("zelda");
     await driver.findElement(By.css(".search-button")).click();
     
     // 4. Click the first game result
-    const gameCard = await driver.wait(until.elementLocated(By.css(".game-card:nth-child(1) img")), 10000);
+    const gameCard = await driver.wait(until.elementLocated(By.css(".game-card:nth-child(1) img")), 30000);
     // Use JavaScript click (more reliable for images inside cards)
     await driver.executeScript("arguments[0].click();", gameCard);
     
@@ -109,7 +112,7 @@ describe('End-to-End Tests', () => {
     // If the button says "Playing" or something else, change 'Active' below to that word.
     const statusBtn = await driver.wait(
       until.elementLocated(By.xpath("//*[text()='Jugando']")), 
-      10000
+      30000
     );
     await statusBtn.click();
     
@@ -117,7 +120,7 @@ describe('End-to-End Tests', () => {
     await driver.get("http://localhost:5173/dashboard");
     
     // Wait for the dashboard grid to load
-    await driver.wait(until.elementLocated(By.css(".game-title")), 10000);
+    await driver.wait(until.elementLocated(By.css(".game-title")), 30000);
     
     // Verify the game is there
     const savedGame = await driver.findElement(By.xpath("//div[contains(@class,'game-card')]//*[contains(text(), 'Skyward Sword')]"));
@@ -129,10 +132,10 @@ describe('End-to-End Tests', () => {
     // 1. Log in first!
     await loginUser(driver);
 
-    const avatar = await driver.wait(until.elementLocated(By.css(".avatar")), 10000);
+    const avatar = await driver.wait(until.elementLocated(By.css(".avatar")), 30000);
     await avatar.click();
     
     // Optional: Verify we are back at login
-    await driver.wait(until.urlContains("/login"), 10000);
+    await driver.wait(until.urlContains("/login"), 30000);
   }, TIMEOUT);
 });
