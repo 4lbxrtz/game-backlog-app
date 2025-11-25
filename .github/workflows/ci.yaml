@@ -45,6 +45,11 @@ jobs:
           echo "DB_PASSWORD=password" >> backend/.env
           echo "DB_DATABASE=gamebacklog_db" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
+      
+      - name: Create .env file for frontend
+        run: |
+          # If your app uses VITE_API_URL, set it here
+          echo "VITE_APP_API_URL=http://localhost:5000" >> frontend/.env
 
       # ----- SEED DATABASE -----
       - name: Seed database
