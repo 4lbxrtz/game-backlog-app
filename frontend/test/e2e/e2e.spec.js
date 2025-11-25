@@ -46,6 +46,15 @@ describe('End-to-End Tests', () => {
     }
   });
 
+  it('register', async function() {
+    await driver.get("http://localhost:5173/register")
+    await driver.findElement(By.id("username")).sendKeys("prueba")
+    await driver.findElement(By.id("email")).sendKeys("prueba@gmail.com")
+    await driver.findElement(By.id("password")).sendKeys("123456789")
+    await driver.findElement(By.id("confirmPassword")).sendKeys("123456789")
+    await driver.findElement(By.id("terms")).click()
+    await driver.findElement(By.css(".btn-register")).click()
+  })
   // Test 1: Explicitly tests the login flow
   it('login', async () => {
     await driver.get("http://localhost:5173/login");
