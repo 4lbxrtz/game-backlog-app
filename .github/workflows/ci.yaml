@@ -37,12 +37,13 @@ jobs:
           cache: "npm"
 
       # ----- ENV VARIABLES FOR BACKEND -----
+      # FIX: Changed DB_DATABASE from 'mydb' to 'gamebacklog_db' to match the service
       - name: Create .env file for backend
         run: |
           echo "DB_HOST=127.0.0.1" >> backend/.env
           echo "DB_USER=user" >> backend/.env
           echo "DB_PASSWORD=password" >> backend/.env
-          echo "DB_DATABASE=mydb" >> backend/.env
+          echo "DB_DATABASE=gamebacklog_db" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
 
       # ----- SEED DATABASE -----
@@ -61,20 +62,21 @@ jobs:
         run: |
           cd frontend
           npm ci
-      
+
       - name: Install wait-on utility
         run: npm install -g wait-on
-      
 
       # ---------- START BACKEND & FRONTEND ----------
       - name: Start backend & frontend concurrently
         run: npm run start &
         shell: bash
-      
-      # ----- STEP 3: WAIT FOR SERVERS -----
-      - name: Wait for servers to be ready
-        run: wait-on http://localhost:5173 http://localhost:5000 --timeout 60000
 
-      # ---------- UNIT TESTS ----------
+      # ----- STEP 3: WAIT FOR SERVERS -----
+      # FIX: Changed http:// to tcp:
+      # This checks if the PORT is open, ignoring 404s/401s which causes timeouts
+      - name: Wait for servers to be ready
+        run: wait-on tcp:5173 tcp:5000 --timeout 60000
+
+      # ---------- UNIT + E2E TESTS ----------
       - name: Run unit tests (backend + frontend)
         run: npm run test
