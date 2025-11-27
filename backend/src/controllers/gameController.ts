@@ -6,7 +6,12 @@ import {
   storeGameMetadata,
   getGameById,
 } from "../models/gameModel";
-import { insertGameIntoCollection, updateGameStatus } from "../models/userModel";
+import {
+  getUserGameStatus,
+  insertGameIntoCollection,
+  updateGameStatus,
+  deleteGameStatus,
+} from "../models/userModel";
 
 // Search games from IGDB (no database storage yet)
 export async function searchGamesController(req: Request, res: Response) {
@@ -75,47 +80,97 @@ export async function getGameController(req: Request, res: Response) {
   }
 }
 
-
 // Add game to user's collection
-export async function addGameToCollectionController(req: Request, res: Response) {
+export async function addGameToCollectionController(
+  req: Request,
+  res: Response
+) {
   try {
-
     const userId = req.user!.userId;
     const { igdbId, status } = req.body;
-    
+
     // Ensure game metadata is in database
     const exists = await gameExists(igdbId);
-    
+
     if (!exists) {
       // Fetch and store game metadata first
       const igdbGame = await getGameDetails(igdbId);
       if (!igdbGame) {
-        return res.status(404).json({ error: 'Game not found in IGDB' });
+        return res.status(404).json({ error: "Game not found in IGDB" });
       }
       await storeGameMetadata(igdbGame);
     }
 
     if (!status) {
-      return res.status(400).json({ error: 'Status is required to add game to collection' });
+      return res
+        .status(400)
+        .json({ error: "Status is required to add game to collection" });
     }
 
     if (!igdbId) {
-      return res.status(400).json({ error: 'igdbId is required to add game to collection' });
+      return res
+        .status(400)
+        .json({ error: "igdbId is required to add game to collection" });
     }
 
-    const validStatuses = ['Playing', 'Completed', 'Wishlist', 'Backlog', 'Abandoned'];
-    
+    const validStatuses = [
+      "Playing",
+      "Completed",
+      "Wishlist",
+      "Backlog",
+      "Abandoned",
+    ];
+
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ error: 'Invalid status value' });
+      return res.status(400).json({ error: "Invalid status value" });
     }
 
     // Now add to user's collection
     await insertGameIntoCollection(userId, igdbId, status);
-    
-    res.json({ message: 'Game added to collection' });
-    
+
+    res.json({ message: "Game added to collection" });
   } catch (error) {
-    console.error('Add game error:', error);
-    res.status(500).json({ error: 'Failed to add game to collection' });
+    console.error("Add game error:", error);
+    res.status(500).json({ error: "Failed to add game to collection" });
+  }
+}
+
+export async function getStatusController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    const gameId = parseInt(req.params.id);
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    const status = await getUserGameStatus(userId, gameId);
+
+    // Return the status (or null if not found)
+    res.json({ status: status || null });
+  } catch (error) {
+    console.error("Get status error:", error);
+    res.status(500).json({ error: "Failed to get game status" });
+  }
+}
+export async function deleteGameFromCollectionController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const userId = req.user!.userId;
+    const gameId = parseInt(req.params.id);
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    
+    await deleteGameStatus(userId, gameId);
+
+    res.json({ message: "Game removed from collection" });
+  } catch (error) {
+    console.error("Delete game error:", error);
+    res.status(500).json({ error: "Failed to delete game from collection" });
   }
 }

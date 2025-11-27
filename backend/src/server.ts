@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import gameRoutes from "./routes/gameRoutes";
 import pool from "./config/database";
 import authRoutes from "./routes/authRoutes";
+import listRoutes from "./routes/listRoutes";
+import logRoutes from "./routes/logRoutes";
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use(express.json());
 
 app.use("/api/games", gameRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/lists", listRoutes);
+app.use("/api/logs", logRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ message: "Server is running!" });

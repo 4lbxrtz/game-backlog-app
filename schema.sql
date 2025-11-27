@@ -62,6 +62,7 @@ CREATE TABLE user_games (
 -- Logs/Sessions table
 CREATE TABLE logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
     user_id INT NOT NULL,
     game_id INT NOT NULL,
     platform_id INT,

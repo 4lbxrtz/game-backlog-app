@@ -30,11 +30,9 @@ export const gameService = {
     return response.data;
   },
 
-  async updateStatus(gameId: number, status: string) {
-    const response = await api.put(`/api/user-games/${gameId}/status`, {
-      status,
-    });
-    return response.data;
+  async getStatus(gameId: number) {
+    const response = await api.get(`/api/games/${gameId}/status`);
+    return response.data.status;
   },
 
   async rate(gameId: number, rating: number) {
@@ -43,4 +41,9 @@ export const gameService = {
     });
     return response.data;
   },
+
+  async deleteFromCollection(gameId: number) {
+    const response = await api.delete(`/api/games/${gameId}`);
+    return response.data;
+  }
 };

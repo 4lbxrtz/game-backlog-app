@@ -189,3 +189,29 @@ export async function updateGameStatus(
     [status, userId, gameId]
   );
 }
+
+export async function getUserGameStatus(
+  userId: number,
+  gameId: number
+): Promise<string | null> {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    "SELECT status, personal_rating FROM user_games WHERE user_id = ? AND game_id = ?",
+    [userId, gameId]
+  );
+
+  if (rows.length > 0) {
+    return rows[0].status;
+  }
+  return null;
+}
+
+export async function deleteGameStatus(
+  userId: number,
+  gameId: number
+): Promise<void> {
+  await pool.query(
+    `DELETE FROM user_games
+    WHERE user_id = ? AND game_id = ?`,
+    [userId, gameId]
+  );
+}
