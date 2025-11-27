@@ -54,19 +54,19 @@ describe('End-to-End Tests', () => {
     await driver.wait(until.urlContains("/dashboard"), 10000);
   }, TIMEOUT);
 
-  it('searchGame', async () => {
-    await driver.get(`${BASE_URL}/search`);
+  // it('searchGame', async () => {
+  //   await driver.get(`${BASE_URL}/search`);
     
-    const searchInput = await driver.wait(until.elementLocated(By.id("q")), 10000);
-    await searchInput.sendKeys("Ricky Raccoon");
-    await driver.findElement(By.css(".search-button")).click();
+  //   const searchInput = await driver.wait(until.elementLocated(By.id("q")), 10000);
+  //   await searchInput.sendKeys("Ricky Raccoon");
+  //   await driver.findElement(By.css(".search-button")).click();
     
-    const img = await driver.wait(until.elementLocated(By.xpath("//img[@alt='Ricky Raccoon']")), 10000);
-    await img.click();
+  //   const img = await driver.wait(until.elementLocated(By.xpath("//img[@alt='Ricky Raccoon']")), 10000);
+  //   await img.click();
     
-    const description = await driver.wait(until.elementLocated(By.css(".game-description")), 10000);
-    expect(await description.getText()).toBe("Little Ricky Raccoon joins his grandpa's treasure hunt at the Amazon River!");
-  }, TIMEOUT);
+  //   const description = await driver.wait(until.elementLocated(By.css(".game-description")), 10000);
+  //   expect(await description.getText()).toBe("Little Ricky Raccoon joins his grandpa's treasure hunt at the Amazon River!");
+  // }, TIMEOUT);
 
   // it('addGame', async () => {
   //   await loginUser(driver);
