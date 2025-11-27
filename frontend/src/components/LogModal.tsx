@@ -1,63 +1,92 @@
-import { useState } from 'react';
-import './LogModal.css'; // We will create this below
+import { useState, useEffect } from 'react';
+import { type Log } from '../services/logService';
+import './LogModal.css';
 
 interface LogModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (data: any) => Promise<void>;
-  platforms: { id?: number; name: string }[]; // To populate the dropdown
+  platforms: { id?: number; name: string }[];
+  initialData?: Log | null; // <--- NEW PROP
 }
 
-export function LogModal({ isOpen, onClose, onSubmit, platforms }: LogModalProps) {
+export function LogModal({ isOpen, onClose, onSubmit, platforms, initialData }: LogModalProps) {
   const [loading, setLoading] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: '',
     platformId: '',
-    timePlayedHours: '', // User enters hours, we convert to minutes
+    timePlayedHours: '', 
     startDate: '',
     endDate: '',
     review: ''
   });
 
-  if (!isOpen) return null;
+  // Helper to extract "YYYY-MM-DD" from ISO string
+  const formatDateForInput = (dateStr?: string) => {
+    if (!dateStr) return '';
+    return dateStr.split('T')[0]; // Simple split for ISO dates
+  };
+
+  // Populate form when modal opens or initialData changes
+  useEffect(() => {
+    if (isOpen && initialData) {
+      setFormData({
+        title: initialData.title || '',
+        platformId: initialData.platform_id ? String(initialData.platform_id) : '',
+        // Convert minutes (DB) to hours (UI)
+        timePlayedHours: initialData.time_played ? String((initialData.time_played / 60).toFixed(1)) : '',
+        startDate: formatDateForInput(initialData.start_date),
+        endDate: formatDateForInput(initialData.end_date),
+        review: initialData.review || ''
+      });
+    } else if (isOpen && !initialData) {
+      // Reset form if opening in "Create" mode
+      setFormData({ title: '', platformId: '', timePlayedHours: '', startDate: '', endDate: '', review: '' });
+    }
+  }, [isOpen, initialData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // Prepare data for backend
       const payload = {
         title: formData.title,
         platformId: formData.platformId ? Number(formData.platformId) : undefined,
-        // Send platform name just in case backend needs to sync it
         platformName: platforms.find(p => p.id === Number(formData.platformId))?.name,
-        // Convert hours to minutes
-        timePlayed: formData.timePlayedHours ? Number(formData.timePlayedHours) * 60 : 0,
+        // Convert hours (UI) to minutes (DB)
+        timePlayed: (formData.timePlayedHours && !isNaN(Number(formData.timePlayedHours))) 
+            ? Number(formData.timePlayedHours) * 60 
+            : 0,
         startDate: formData.startDate || undefined,
         endDate: formData.endDate || undefined,
         review: formData.review
       };
 
       await onSubmit(payload);
-      onClose(); // Close modal on success
-      // Reset form
-      setFormData({ title: '', platformId: '', timePlayedHours: '', startDate: '', endDate: '', review: '' });
-    } catch (error) {
+      onClose();
+    } catch (error: any) {
       console.error(error);
-      alert('Error saving log');
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(`Error: ${error.response.data.error}`);
+      } else {
+        alert('Error saving log.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Añadir Log (Partida)</h2>
+        <h2>{initialData ? 'Editar Log' : 'Añadir Log'}</h2>
         <form onSubmit={handleSubmit}>
+          {/* ... Same inputs as before ... */}
           <div className="form-group">
-            <label>Título (Ej: Primera pasada, Speedrun...)</label>
+            <label>Título</label>
             <input 
               type="text" 
               required 
@@ -85,6 +114,7 @@ export function LogModal({ isOpen, onClose, onSubmit, platforms }: LogModalProps
               <input 
                 type="number" 
                 min="0"
+                step="0.1"
                 value={formData.timePlayedHours}
                 onChange={e => setFormData({...formData, timePlayedHours: e.target.value})}
                 placeholder="Ej: 45"
@@ -117,14 +147,13 @@ export function LogModal({ isOpen, onClose, onSubmit, platforms }: LogModalProps
               rows={4}
               value={formData.review}
               onChange={e => setFormData({...formData, review: e.target.value})}
-              placeholder="¿Qué te pareció esta partida?"
             />
           </div>
 
           <div className="modal-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>Cancelar</button>
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Guardando...' : 'Guardar Log'}
+              {loading ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
         </form>

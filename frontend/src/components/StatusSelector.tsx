@@ -4,7 +4,8 @@ import '../views/Game.css'
 type Props = {
   gameId: number
   currentStatus: string | null
-  onStatusChange: (newStatus: string) => void
+  // Update type to accept null (clearing the status)
+  onStatusChange: (newStatus: string | null) => void 
 }
 
 export default function StatusSelector({ gameId, currentStatus, onStatusChange }: Props) {
@@ -13,16 +14,24 @@ export default function StatusSelector({ gameId, currentStatus, onStatusChange }
     { key: 'Backlog', label: 'Backlog', icon: '📚' },
     { key: 'Playing', label: 'Jugando', icon: '🎮' },
     { key: 'Completed', label: 'Completado', icon: '✓' },
+    { key: 'Abandoned', label: 'Abandonado', icon: '🚫' },
   ]
   
   const handleStatusChange = async (status: string) => {
-    if (status === currentStatus) {
-      await gameService.deleteFromCollection(gameId)
-    } else {
-      await gameService.addToCollection(gameId, status)
+    try {
+      if (status === currentStatus) {
+        // Case: Removing from collection
+        await gameService.deleteFromCollection(gameId)
+        onStatusChange(null) // <--- FIX: Tell parent to set status to null
+      } else {
+        // Case: Adding/Changing status
+        await gameService.addToCollection(gameId, status)
+        onStatusChange(status)
+      }
+    } catch (error) {
+      console.error("Error updating status:", error)
+      alert("Error al actualizar el estado")
     }
-    
-    onStatusChange(status)
   }
 
   return (

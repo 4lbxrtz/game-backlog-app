@@ -346,8 +346,37 @@
         .log-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
-            margin-bottom: 20px;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .log-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .edit-btn {
+            color: #ccc;
+        }
+        .edit-btn:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .delete-btn {
+            color: #ff4d6d;
+        }
+        .delete-btn:hover {
+            background-color: rgba(255, 77, 109, 0.2);
         }
 
         .log-title {

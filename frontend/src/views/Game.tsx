@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { gameService } from '../services/gameService'
-import StatusSelector from '../components/status'
+import StatusSelector from '../components/StatusSelector'
 import { logService, type Log } from '../services/logService'
 import { LogModal } from '../components/LogModal'
 import { ListSelectorModal } from '../components/ListSelectorModal';
@@ -33,6 +33,7 @@ function Game() {
     const [loading, setLoading] = useState(true)
     const [isLogModalOpen, setIsLogModalOpen] = useState(false) // State for Modal
     const [isListModalOpen, setIsListModalOpen] = useState(false); // <--- New State
+    const [editingLog, setEditingLog] = useState<Log | null>(null); // <--- NEW STATE
 
 
     // Helper to format dates (e.g., "2024-01-15" -> "Enero 2024")
@@ -85,20 +86,52 @@ function Game() {
         fetchData()
     }, [id])
 
-    // Handle creating a new log
-    const handleCreateLog = async (logData: any) => {
+    const handleSaveLog = async (logData: any) => {
         if (!game) return;
         
-        // Add gameId to payload
-        await logService.create({
-            ...logData,
-            gameId: game.id
-        });
+        if (editingLog) {
+            // UPDATE EXISTING
+            await logService.update(editingLog.id, logData);
+        } else {
+            // CREATE NEW
+            await logService.create({
+                ...logData,
+                gameId: game.id
+            });
+        }
 
-        // Refresh logs list
+        // Refresh logs
         const updatedLogs = await logService.getByGameId(game.id);
         setLogs(updatedLogs);
+        setEditingLog(null); // Reset editing state
     }
+
+    // 2. Open Modal for Edit
+    const handleEditClick = (log: Log) => {
+        setEditingLog(log);
+        setIsLogModalOpen(true);
+    }
+
+    // 3. Open Modal for Create (Reset editing)
+    const handleCreateClick = () => {
+        setEditingLog(null);
+        setIsLogModalOpen(true);
+    }
+
+    // 4. Handle Delete
+    const handleDeleteClick = async (logId: number) => {
+        if (window.confirm("¿Estás seguro de que quieres eliminar este log?")) {
+            try {
+                await logService.delete(logId);
+                // Remove from state immediately without fetching
+                setLogs(prevLogs => prevLogs.filter(l => l.id !== logId));
+            } catch (error) {
+                alert("Error eliminando el log");
+                console.error(error);
+            }
+        }
+    }
+
 
     
     if (loading) {
@@ -185,10 +218,9 @@ function Game() {
                     </div>
                 </div>
                 <div className="action-buttons">
-                        <button className="btn-primary" onClick={() => setIsLogModalOpen(true)}>
+                        <button className="btn-primary" onClick={handleCreateClick}>
                             + Añadir log
                         </button>
-                        <button className="btn-secondary">Editar estado</button>
                         
                         {/* CONNECT THE BUTTON */}
                         <button 
@@ -219,7 +251,24 @@ function Game() {
                                             {renderDateRange(log.start_date, log.end_date)}
                                         </div>
                                     </div>
-                                    {/* Removed Rating per log as per schema update */}
+                                    
+                                    {/* NEW: Edit/Delete Buttons */}
+                                    <div className="log-actions">
+                                        <button 
+                                            className="icon-btn edit-btn" 
+                                            onClick={() => handleEditClick(log)}
+                                            title="Editar"
+                                        >
+                                            ✎
+                                        </button>
+                                        <button 
+                                            className="icon-btn delete-btn" 
+                                            onClick={() => handleDeleteClick(log.id)}
+                                            title="Eliminar"
+                                        >
+                                            🗑️
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <div className="log-details">
@@ -253,8 +302,9 @@ function Game() {
             <LogModal 
                 isOpen={isLogModalOpen} 
                 onClose={() => setIsLogModalOpen(false)}
-                onSubmit={handleCreateLog}
-                platforms={game.platforms} // Pass game platforms to dropdown
+                onSubmit={handleSaveLog} // Renamed function
+                platforms={game.platforms}
+                initialData={editingLog} // Pass the log to edit
             />
             <ListSelectorModal
                 isOpen={isListModalOpen}

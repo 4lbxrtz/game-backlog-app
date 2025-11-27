@@ -10,7 +10,7 @@ import {
   getUserGameStatus,
   insertGameIntoCollection,
   updateGameStatus,
-  deleteGameStatus,
+  removeGameFromCollection,
 } from "../models/userModel";
 
 // Search games from IGDB (no database storage yet)
@@ -165,8 +165,7 @@ export async function deleteGameFromCollectionController(
       return res.status(400).json({ error: "Invalid game ID" });
     }
 
-    
-    await deleteGameStatus(userId, gameId);
+    await removeGameFromCollection(userId, gameId);
 
     res.json({ message: "Game removed from collection" });
   } catch (error) {

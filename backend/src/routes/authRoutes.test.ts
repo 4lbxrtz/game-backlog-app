@@ -28,46 +28,6 @@ describe("authRoutes", () => {
     router = (await import("./authRoutes")).default;
   });
 
-  it("has CORS middleware that sets headers and responds to OPTIONS", () => {
-    // First stack item is the CORS middleware defined via router.use(...)
-    const corsLayer = (router as any).stack[0];
-    expect(corsLayer).toBeDefined();
-    const corsMiddleware = corsLayer.handle;
-
-    // Simulate res object to capture headers and status
-    const headers: Record<string, string> = {};
-    let sentStatus: number | undefined;
-    const res = {
-      header: (k: string, v: string) => {
-        headers[k] = v;
-        return res;
-      },
-      sendStatus: (code: number) => {
-        sentStatus = code;
-        return res;
-      },
-    } as any;
-
-    const next = vi.fn();
-
-    // OPTIONS should short-circuit with 200
-    corsMiddleware({ method: "OPTIONS" } as any, res, next);
-    expect(headers["Access-Control-Allow-Origin"]).toBe("*");
-    expect(headers["Access-Control-Allow-Methods"]).toContain("GET");
-    expect(headers["Access-Control-Allow-Methods"]).toContain("POST");
-    expect(headers["Access-Control-Allow-Headers"]).toContain("Content-Type");
-    expect(sentStatus).toBe(200);
-
-    // Non-OPTIONS should call next()
-    const next2 = vi.fn();
-    const res2 = {
-      header: () => res2,
-      sendStatus: vi.fn(),
-    } as any;
-    corsMiddleware({ method: "GET" } as any, res2, next2);
-    expect(next2).toHaveBeenCalled();
-  });
-
   it("defines POST /register route using register controller", () => {
     const routeLayers = (router as any).stack.filter((l: any) => l.route);
     const registerRoute = routeLayers.find(

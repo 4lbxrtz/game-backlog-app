@@ -205,7 +205,7 @@ export async function getUserGameStatus(
   return null;
 }
 
-export async function deleteGameStatus(
+export async function removeGameFromCollection(
   userId: number,
   gameId: number
 ): Promise<void> {

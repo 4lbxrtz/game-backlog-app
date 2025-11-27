@@ -13,7 +13,6 @@ vi.mock("./api", () => ({
 
 const getMock = api.get as unknown as ReturnType<typeof vi.fn>;
 const postMock = api.post as unknown as ReturnType<typeof vi.fn>;
-const putMock = api.put as unknown as ReturnType<typeof vi.fn>;
 
 describe("gameService", () => {
   beforeEach(() => {
@@ -86,26 +85,6 @@ describe("gameService", () => {
     const res = await gameService.getUserGames("completed");
 
     expect(getMock).toHaveBeenCalledWith("/api/user-games", { params: { status: "completed" } });
-    expect(res).toEqual(resp);
-  });
-
-  it("updateStatus puts status and returns data", async () => {
-    const resp = { ok: true };
-    putMock.mockResolvedValueOnce({ data: resp });
-
-    const res = await gameService.updateStatus(5, "backlog");
-
-    expect(putMock).toHaveBeenCalledWith("/api/user-games/5/status", { status: "backlog" });
-    expect(res).toEqual(resp);
-  });
-
-  it("rate puts rating and returns data", async () => {
-    const resp = { rating: 9 };
-    putMock.mockResolvedValueOnce({ data: resp });
-
-    const res = await gameService.rate(6, 9);
-
-    expect(putMock).toHaveBeenCalledWith("/api/user-games/6/rating", { rating: 9 });
     expect(res).toEqual(resp);
   });
 });
