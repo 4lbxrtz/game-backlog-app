@@ -5,6 +5,9 @@ import {
   gameExists,
   storeGameMetadata,
   getGameById,
+  getUserRating,
+  getRating,
+  updateUserRating,
 } from "../models/gameModel";
 import {
   getUserGameStatus,
@@ -171,5 +174,83 @@ export async function deleteGameFromCollectionController(
   } catch (error) {
     console.error("Delete game error:", error);
     res.status(500).json({ error: "Failed to delete game from collection" });
+  }
+}
+
+export async function getUserRatingController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const userId = req.user!.userId;
+    const gameId = parseInt(req.params.gameId);
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    console.log(`Fetching rating for user ${userId} and game ${gameId}`);
+    const rating = await getUserRating(userId, gameId);
+    console.log(`Fetched rating: ${rating}`);
+
+    // Return the rating (or null if not found)
+    res.json({ rating: rating || null });
+  } catch (error) {
+    console.error("Get user rating error:", error);
+    res.status(500).json({ error: "Failed to get user rating" });
+  }
+}
+
+export async function changeUserRatingController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const userId = req.user!.userId;
+    const gameId = parseInt(req.params.gameId);
+    const { rating } = req.body;
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    if (
+      typeof rating !== "number" ||
+      rating < 0 ||
+      rating > 5
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Rating must be a number between 0 and 5" });
+    }
+
+    // Update the user's rating for the game
+    await updateUserRating(userId, gameId, rating);
+
+    res.json({ message: "User rating updated successfully" });
+  } catch (error) {
+    console.error("Change user rating error:", error);
+    res.status(500).json({ error: "Failed to change user rating" });
+  }
+}
+
+export async function getRatingController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const gameId = parseInt(req.params.gameId);
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    const rating = await getRating(gameId);
+
+    // Return the average rating (or null if not found)
+    res.json({ rating: rating || null });
+  } catch (error) {
+    console.error("Get rating error:", error);
+    res.status(500).json({ error: "Failed to get game rating" });
   }
 }

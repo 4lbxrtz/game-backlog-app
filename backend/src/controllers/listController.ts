@@ -43,20 +43,38 @@ export async function getMyListsController(req: Request, res: Response) {
 }
 
 // Get a single list details
+// backend/src/controllers/listController.ts
+
 export async function getListDetailsController(req: Request, res: Response) {
   try {
     const userId = req.user!.userId;
-    const listId = parseInt(req.params.id);
+    // Imprimimos qué llega exactamente en la URL
+    console.log("--- DEBUG GET LIST ---");
+    console.log("Params ID:", req.params.id);
+    console.log("User ID:", userId);
 
-    // Check ownership or if you want lists to be public later, change this logic
-    const isOwner = await checkListOwnership(listId, userId);
-    if (!isOwner) {
-      return res.status(403).json({ error: "Access denied or list not found" });
+    const listId = parseInt(req.params.id);
+    
+    if (isNaN(listId)) {
+        console.log("Error: listId es NaN");
+        return res.status(400).json({ error: "ID inválido" });
     }
 
+    // 1. Verificar propiedad
+    // NOTA: Si checkListOwnership falla, el usuario recibe 403
+    const isOwner = await checkListOwnership(listId, userId);
+    console.log("¿Es dueño?:", isOwner);
+    
+    if (!isOwner) {
+      return res.status(403).json({ error: "Acceso denegado o lista no encontrada" });
+    }
+
+    // 2. Obtener lista
     const list = await getListById(listId);
+    console.log("Resultado de getListById:", list ? "Lista encontrada" : "NULL");
+
     if (!list) {
-      return res.status(404).json({ error: "List not found" });
+      return res.status(404).json({ error: "Lista no encontrada en base de datos" });
     }
 
     res.json(list);

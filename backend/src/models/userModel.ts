@@ -146,6 +146,36 @@ export async function getBacklogGames(userId: number, limit: number = 6) {
   return rows;
 }
 
+// Get user's wishlist games
+export async function getWishlistGames(userId: number, limit: number = 6) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT g.id, g.title, g.cover_url
+    FROM games g
+    JOIN user_games ug ON g.id = ug.game_id
+    WHERE ug.user_id = ? AND ug.status = 'Wishlist'
+    ORDER BY ug.added_at DESC
+    LIMIT ?`,
+    [userId, limit]
+  );
+
+  return rows;
+}
+
+// Get user's completed games
+export async function getCompletedGames(userId: number, limit: number = 6) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT g.id, g.title, g.cover_url
+    FROM games g
+    JOIN user_games ug ON g.id = ug.game_id
+    WHERE ug.user_id = ? AND ug.status = 'Completed'
+    ORDER BY ug.updated_at DESC
+    LIMIT ?`,
+    [userId, limit]
+  );
+
+  return rows;
+}
+
 // Get user's custom lists
 export async function getUserLists(userId: number) {
   const [rows] = await pool.query<RowDataPacket[]>(

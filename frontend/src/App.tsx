@@ -5,6 +5,8 @@ import Game from './views/Game'
 import Register from './views/Register'
 import Login from './views/Login'
 import Search from './views/Search'
+import { List } from './views/List'
+import { ListDetail } from './views/ListDetail'
 
 function Home() {
   return (
@@ -31,6 +33,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/list" element={<List />} />
+      <Route path="/list/:id" element={<ListDetail />} />
     </Routes>
   )
 }

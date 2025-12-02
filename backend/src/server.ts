@@ -27,7 +27,7 @@ app.use(express.json());
 
 app.use("/api/games", gameRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/lists", listRoutes);
+app.use("/api/list", listRoutes);
 app.use("/api/logs", logRoutes);
 
 app.get("/api/health", (req, res) => {

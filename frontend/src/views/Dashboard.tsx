@@ -35,6 +35,8 @@ interface DashboardData {
     currentlyPlaying: Game[]
     backlog: Game[]
     lists: CustomList[]
+    wishlist: Game[]
+    completed: Game[]
 }
 
 function Dashboard() {
@@ -187,7 +189,7 @@ function Dashboard() {
                 <div className="lists-section">
                     <div className="section-header">
                         <h2 className="section-title">Mis listas</h2>
-                        <a href="#" className="view-all">+ Nueva</a>
+                        <a href="/list" className="view-all">Ver todas →</a>
                     </div>
                     <div className="custom-lists">
                         {data.lists.length > 0 ? (
@@ -235,6 +237,60 @@ function Dashboard() {
                     )}
                 </div>
             </div>
+
+            <div className="section">
+                    <div className="section-header">
+                        <h2 className="section-title">Completados</h2>
+                        <a href="#" className="view-all">Ver todos →</a>
+                    </div>
+                    <div className="game-grid">
+                        {data.completed.length > 0 ? (
+                            data.completed.map(game => (
+                                <div key={game.id} className="game-card" onClick={() => navigate(`/game/${game.id}`)}>
+                                    <div className="game-cover" style={{
+                                        backgroundImage: game.cover_url ? `url(${game.cover_url})` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}>
+                                        {!game.cover_url && 'Sin portada'}
+                                    </div>
+                                    <div className="game-title">{game.title}</div>
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ padding: '20px', color: '#666' }}>
+                                No hay juegos en progreso. <a href="/search">Añade uno!</a>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="section">
+                    <div className="section-header">
+                        <h2 className="section-title">Lista de deseados</h2>
+                        <a href="#" className="view-all">Ver todos →</a>
+                    </div>
+                    <div className="game-grid">
+                        {data.wishlist.length > 0 ? (
+                            data.wishlist.map(game => (
+                                <div key={game.id} className="game-card" onClick={() => navigate(`/game/${game.id}`)}>
+                                    <div className="game-cover" style={{
+                                        backgroundImage: game.cover_url ? `url(${game.cover_url})` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}>
+                                        {!game.cover_url && 'Sin portada'}
+                                    </div>
+                                    <div className="game-title">{game.title}</div>
+                                </div>
+                            ))
+                        ) : (
+                            <div style={{ padding: '20px', color: '#666' }}>
+                                No hay juegos en progreso. <a href="/search">Añade uno!</a>
+                            </div>
+                        )}
+                    </div>
+                </div>
         </div>
     )
 }

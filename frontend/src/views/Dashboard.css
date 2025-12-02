@@ -100,7 +100,7 @@ body {
         }
 
         .stats-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto 70px;
             padding: 40px;
             background: rgba(255, 255, 255, 0.03);
@@ -139,6 +139,7 @@ body {
         .section {
             margin-bottom: 60px;
             padding: 0 20px;
+            
         }
 
         .section-header {
@@ -210,7 +211,11 @@ body {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 60px;
-            padding: 0 20px;
+            padding: 0;
+        }
+
+        .main-content:div {
+            padding: 0px;
         }
 
         .lists-section {

@@ -6,6 +6,8 @@ import StatusSelector from '../components/StatusSelector'
 import { logService, type Log } from '../services/logService'
 import { LogModal } from '../components/LogModal'
 import { ListSelectorModal } from '../components/ListSelectorModal';
+import RatingModal from '../components/RatingModal';
+import GameRatingModal from '../components/GameRatingModal';
 import './Game.css'
 
 interface Game {
@@ -21,6 +23,11 @@ interface Game {
     rating_count: number
 }
 
+interface Rating {
+    average: number
+    count: number
+}
+
 
 function Game() {
     const navigate = useNavigate()
@@ -34,6 +41,8 @@ function Game() {
     const [isLogModalOpen, setIsLogModalOpen] = useState(false) // State for Modal
     const [isListModalOpen, setIsListModalOpen] = useState(false); // <--- New State
     const [editingLog, setEditingLog] = useState<Log | null>(null); // <--- NEW STATE
+    const [userRating, setUserRating] = useState<number | null>(null); // NEW STATE for user rating
+    const [rating, setRating] = useState<Rating | null>(null); // NEW STATE for user rating
 
 
     // Helper to format dates (e.g., "2024-01-15" -> "Enero 2024")
@@ -76,6 +85,16 @@ function Game() {
                     console.log('Game not in user collection yet.', error)
                     setUserStatus(null) 
                 }
+                // 4. Fetch User Rating
+                const userRating = await gameService.getUserRating(Number(id))
+                setUserRating(userRating);
+
+                // 5. Fetch Game Rating
+                const rating = await gameService.getRating(Number(id))
+                setRating(rating);
+                console.log('Game rating fetched:', rating)
+                console.log('Average rating:', rating ? rating.average : 'N/A')
+                console.log("Rating count:", rating ? rating.count : 'N/A')
             } catch (error) {
                 console.error('Error loading game data:', error)
             } finally {
@@ -157,8 +176,8 @@ function Game() {
                 <div className="game-cover"><img src={game?.cover_url} alt={game?.title} /></div>
                 <div className="rating-display">
                         <div className="rating-label">Tu valoración</div>
-                        <div className="rating-value">5.0</div>
-                        <div className="stars">★★★★★</div>
+                        <div className="rating-value">{userRating !== null ? Number(userRating).toFixed(1) : "N/A"}</div>
+                      <RatingModal gameId={game.id} userRating={userRating} onChange={(val) => setUserRating(val as number)} />
                     </div>
                 <StatusSelector gameId={game.id} currentStatus={userStatus} onStatusChange={(newStatus) => {setUserStatus(newStatus)}} />
             </div>
@@ -175,9 +194,10 @@ function Game() {
                 <div className="ratings-section">
                     <div className="global-rating-header">
                         <div className="rating-label">Valoración global</div>
-                        <div className="rating-value">4.6</div>
-                        <div className="stars">★★★★★</div>
-                        <div className="rating-count">Basado en 1,247 valoraciones</div>
+                        <div className="rating-value">{rating !== null ? Number(rating.average).toFixed(1) : "N/A"}</div>
+                        
+                        <GameRatingModal rating={rating !== null && rating.average !== null ? rating.average : 0} />
+                        <div className="rating-count">Basado en {rating !== null ? rating.count : "N/A"} valoraciones</div>
                     </div>
                     <div className="rating-bars">
                         <div className="rating-bar-row">

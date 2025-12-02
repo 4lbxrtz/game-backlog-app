@@ -14,7 +14,7 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1700px;
             margin: 0 auto;
         }
 
@@ -216,6 +216,34 @@
             color: #FC6399;
             font-size: 20px;
             margin-bottom: 5px;
+        }
+
+        /* Star states */
+        .star {
+            display: inline-block;
+            position: relative;
+            color: #555; /* empty color */
+            font-size: 20px;
+            line-height: 1;
+            margin-right: 4px;
+        }
+        .star.full {
+            color: #FC6399;
+        }
+        .star.half {
+            color: #555; /* base empty color */
+        }
+        .star.half::before {
+            content: '★';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            overflow: hidden;
+            color: #FC6399;
+        }
+        .star.empty {
+            color: #555;
         }
 
         .rating-count {

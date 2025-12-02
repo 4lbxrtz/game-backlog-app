@@ -8,6 +8,8 @@ export interface CustomList {
   name: string;
   description?: string;
   games?: any[]; // For when we fetch the list with games
+  game_count?: number; // <--- New
+  covers?: string[]; // <--- New (Array of URLs)
 }
 
 // 1. Create a new list
@@ -23,43 +25,78 @@ export async function createList(
   return result.insertId;
 }
 
-// 2. Get all lists for a specific user (just metadata, no games)
 export async function getUserLists(userId: number): Promise<CustomList[]> {
-  const [rows] = await pool.query<RowDataPacket[]>(
-    "SELECT id, name, description FROM lists WHERE user_id = ?",
-    [userId]
-  );
-  return rows as CustomList[];
+  // We use a LEFT JOIN to count games and a Subquery (or JSON_ARRAYAGG) to get covers.
+  // This query groups by list and fetches details.
+  const query = `
+    SELECT 
+      l.id, 
+      l.name, 
+      l.description,
+      COUNT(lg.game_id) as game_count,
+      (
+        SELECT JSON_ARRAYAGG(g.cover_url)
+        FROM list_games lg2
+        JOIN games g ON lg2.game_id = g.id
+        WHERE lg2.list_id = l.id
+      ) as covers
+    FROM lists l
+    LEFT JOIN list_games lg ON l.id = lg.list_id
+    WHERE l.user_id = ?
+    GROUP BY l.id, l.name, l.description
+    ORDER BY l.id DESC
+  `;
+
+  const [rows] = await pool.query<RowDataPacket[]>(query, [userId]);
+
+  // Parse the JSON string returned by JSON_ARRAYAGG (if your MySQL driver doesn't auto-parse)
+  return rows.map((row) => ({
+    ...row,
+    covers: row.covers
+      ? typeof row.covers === "string"
+        ? JSON.parse(row.covers)
+        : row.covers
+      : [],
+  })) as CustomList[];
 }
 
-// 3. Get a specific list with all its games
 export async function getListById(listId: number): Promise<CustomList | null> {
-  // First get the list metadata
+  // PASO 1: Obtener metadatos de la lista (Nombre, descripción...)
   const [listRows] = await pool.query<RowDataPacket[]>(
     "SELECT * FROM lists WHERE id = ?",
     [listId]
   );
 
+  // Si no existe la lista, devolvemos null inmediatamente
   if (listRows.length === 0) return null;
 
   const list = listRows[0] as CustomList;
 
-  // Now get the games associated with this list
-  // We join with the games table to get title, cover, etc.
+  // PASO 2: Obtener los juegos de esa lista (si los tiene)
+  // Usamos LEFT JOIN con user_games para saber si el usuario los ha completado (status)
   const [gameRows] = await pool.query<RowDataPacket[]>(
-    `SELECT g.id, g.title, g.cover_url, g.release_date 
-     FROM games g
-     JOIN list_games lg ON g.id = lg.game_id
-     WHERE lg.list_id = ?`,
+    `SELECT 
+        g.id, 
+        g.title, 
+        g.cover_url, 
+        g.release_date,
+        ug.status,
+        ug.personal_rating
+     FROM list_games lg
+     JOIN games g ON lg.game_id = g.id
+     JOIN lists l ON lg.list_id = l.id
+     LEFT JOIN user_games ug ON g.id = ug.game_id AND l.user_id = ug.user_id
+     WHERE lg.list_id = ?
+     ORDER BY lg.game_id DESC`,
     [listId]
   );
 
+  // Devolvemos la lista combinada con sus juegos (o array vacío si no tiene)
   return {
     ...list,
-    games: gameRows,
+    games: gameRows as any[], // El 'as any[]' evita conflictos de tipos menores
   };
 }
-
 // 4. Check if a user owns a specific list (Security check)
 export async function checkListOwnership(
   listId: number,

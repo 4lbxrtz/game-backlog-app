@@ -114,6 +114,52 @@ export async function linkGamePlatform(
   );
 }
 
+export async function getUserRating(
+  userId: number,
+  gameId: number
+): Promise<number | null> {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT personal_rating FROM user_games 
+     WHERE user_id = ? AND game_id = ? limit 1`,
+    [userId, gameId]
+  );
+
+  if (rows.length === 0) {
+    return null; // No rating found
+  }
+
+  return rows[0].personal_rating;
+}
+
+export async function getRating(
+  gameId: number
+) {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT AVG(personal_rating) AS average, count(*) AS count FROM user_games 
+     WHERE game_id = ? AND personal_rating IS NOT NULL`,
+    [gameId]
+  );
+
+  if (rows.length === 0 || rows[0].average === null) {
+    return null; // No ratings found
+  }
+
+  return rows[0];
+}
+
+export async function updateUserRating(
+  userId: number,
+  gameId: number,
+  rating: number
+): Promise<void> {
+  await pool.query(
+    `UPDATE user_games 
+     SET personal_rating = ? 
+     WHERE user_id = ? AND game_id = ?`,
+    [rating, userId, gameId]
+  );
+}
+
 // Main function: Store complete game metadata
 export async function storeGameMetadata(igdbGame: any): Promise<void> {
   const connection = await pool.getConnection();

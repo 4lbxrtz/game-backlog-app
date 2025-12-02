@@ -6,7 +6,8 @@
     -apple-system, 'Segoe UI', 
     Roboto, 'Helvetica Neue', 
     Arial; 
-    width: 800px;
+    width: 1000px;
+    margin: 0 auto;
 }
 
 .search-card { 

@@ -55,6 +55,7 @@ export function ListSelectorModal({ isOpen, onClose, gameId }: Props) {
       setNewListName('');
       setShowCreateForm(false);
       loadLists(); // Refresh list to show the new one
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert("Error creando la lista");
     }

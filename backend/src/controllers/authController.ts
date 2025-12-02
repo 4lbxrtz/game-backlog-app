@@ -9,6 +9,8 @@ import {
   getCurrentlyPlayingGames,
   getUserLists,
   getUserStats,
+  getWishlistGames,
+  getCompletedGames,
 } from "../models/userModel";
 import { hashPassword, comparePassword, generateToken } from "../utils/auth";
 import { UserRegistration, UserLogin } from "../types";
@@ -137,11 +139,14 @@ export async function getDashboard(req: Request, res: Response): Promise<void> {
       return;
     }
     // Get all dashboard data in parallel (faster!)
-    const [stats, currentlyPlaying, backlog, lists] = await Promise.all([
+    const [stats, currentlyPlaying, backlog, lists, wishlist, completed] = await Promise.all([
       getUserStats(userId),
       getCurrentlyPlayingGames(userId, 4),
       getBacklogGames(userId, 8),
       getUserLists(userId),
+      getWishlistGames(userId, 8),
+      getCompletedGames(userId, 8),
+
     ]);
 
     res.json({
@@ -155,6 +160,8 @@ export async function getDashboard(req: Request, res: Response): Promise<void> {
       currentlyPlaying,
       backlog,
       lists,
+      wishlist,
+      completed,
     });
   } catch (error) {
     console.error("Get dashboard error:", error);
