@@ -10,13 +10,16 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.0",
+    "@vitest/coverage-v8": "^4.0.15",
     "nodemon": "^3.1.10",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   },
   "scripts": {
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && npm run dev",
     "start:frontend": "cd frontend && npm run dev",
-    "test": "concurrently \"cd backend && npm run test\" \"cd frontend && npm run test\""
+    "test": "concurrently \"cd backend && npm run test\" \"cd frontend && npm run test\"",
+    "test:coverage": "concurrently \"cd backend && npm run test:coverage\" \"cd frontend && npm run test:coverage\""
   }
 }

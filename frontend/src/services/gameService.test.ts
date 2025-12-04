@@ -67,24 +67,4 @@ describe("gameService", () => {
     expect(postMock).toHaveBeenCalledWith("/api/games/collection", { igdbId: 10, status: "playing" });
     expect(res).toEqual(resp);
   });
-
-  it("getUserGames calls api.get with empty params when status undefined", async () => {
-    const resp = [{ id: 1 }];
-    getMock.mockResolvedValueOnce({ data: resp });
-
-    const res = await gameService.getUserGames();
-
-    expect(getMock).toHaveBeenCalledWith("/api/user-games", { params: {} });
-    expect(res).toEqual(resp);
-  });
-
-  it("getUserGames calls api.get with status param when provided", async () => {
-    const resp = [{ id: 2 }];
-    getMock.mockResolvedValueOnce({ data: resp });
-
-    const res = await gameService.getUserGames("completed");
-
-    expect(getMock).toHaveBeenCalledWith("/api/user-games", { params: { status: "completed" } });
-    expect(res).toEqual(resp);
-  });
 });

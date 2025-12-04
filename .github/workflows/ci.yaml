@@ -82,8 +82,14 @@ jobs:
         run: wait-on tcp:127.0.0.1:5173 tcp:127.0.0.1:5000 --timeout 60000
 
       # ----- RUN TESTS -----
-      - name: Run unit tests (backend + frontend)
-        run: npm run test
+      - name: Run tests with coverage (backend + frontend)
+        run: npm run test:coverage
+
+      # ----- UPLOAD COVERAGE -----
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5.5.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       # ----- DEBUGGING -----
       # CHANGE 4: If tests fail, print the server logs to the console
