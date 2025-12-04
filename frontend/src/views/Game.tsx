@@ -30,6 +30,17 @@ interface Rating {
     count: number
 }
 
+interface LogInput {
+  gameId: number;
+  title: string;
+  platformId?: number;
+  platformName?: string;
+  timePlayed?: number;
+  startDate?: string;
+  endDate?: string;
+  review?: string;
+}
+
 
 function Game() {
     const navigate = useNavigate()
@@ -113,7 +124,7 @@ function Game() {
         fetchData()
     }, [id])
 
-    const handleSaveLog = async (logData: any) => {
+    const handleSaveLog = async (logData: LogInput) => {
         if (!game) return;
         
         if (editingLog) {
