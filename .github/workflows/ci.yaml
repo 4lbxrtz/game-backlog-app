@@ -45,7 +45,7 @@ jobs:
           echo "DB_PASSWORD=password" >> backend/.env
           echo "DB_NAME=gamebacklog_db" >> backend/.env
           echo "DB_PORT=3306" >> backend/.env
-      
+
       # CHANGE 2: Force Frontend to talk to Backend via 127.0.0.1
       - name: Create .env file for frontend
         run: |
@@ -84,13 +84,6 @@ jobs:
       # ----- RUN TESTS -----
       - name: Run unit tests (backend + frontend)
         run: npm run test
-      
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # ----- DEBUGGING -----
       # CHANGE 4: If tests fail, print the server logs to the console

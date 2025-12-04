@@ -13,6 +13,8 @@ vi.mock("../models/userModel", () => ({
   findUserById: vi.fn(),
   getBacklogGames: vi.fn(),
   getCurrentlyPlayingGames: vi.fn(),
+  getWishlistGames: vi.fn(),
+  getCompletedGames: vi.fn(),
   getUserLists: vi.fn(),
   getUserStats: vi.fn(),
 }));
@@ -230,6 +232,8 @@ describe("authController - getDashboard", () => {
     (userModel.getCurrentlyPlayingGames as any).mockResolvedValue([{ id: 1 }]);
     (userModel.getBacklogGames as any).mockResolvedValue([{ id: 2 }]);
     (userModel.getUserLists as any).mockResolvedValue([{ id: 3 }]);
+    (userModel.getWishlistGames as any).mockResolvedValue([{ id: 4 }]);
+    (userModel.getCompletedGames as any).mockResolvedValue([{ id: 5 }]);
 
     const req = mockRequest({}, { userId: 2 });
     const res = mockResponse();
@@ -239,6 +243,8 @@ describe("authController - getDashboard", () => {
     expect(userModel.getCurrentlyPlayingGames).toHaveBeenCalledWith(2, 4);
     expect(userModel.getBacklogGames).toHaveBeenCalledWith(2, 8);
     expect(userModel.getUserLists).toHaveBeenCalledWith(2);
+    expect(userModel.getWishlistGames).toHaveBeenCalledWith(2, 8);
+    expect(userModel.getCompletedGames).toHaveBeenCalledWith(2, 8);
 
     expect(res.body).toHaveProperty("user");
     expect(res.body.user).toMatchObject({
@@ -251,5 +257,7 @@ describe("authController - getDashboard", () => {
     expect(res.body).toHaveProperty("currentlyPlaying");
     expect(res.body).toHaveProperty("backlog");
     expect(res.body).toHaveProperty("lists");
+    expect(res.body).toHaveProperty("wishlist");
+    expect(res.body).toHaveProperty("completed");
   });
 });
