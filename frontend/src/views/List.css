@@ -302,3 +302,45 @@ header {
         grid-template-columns: 1fr;
     }
 }
+
+.list-card {
+    position: relative; /* Necesario para que el absolute funcione */
+    overflow: hidden;   /* Para que el botón no se salga en border-radius */
+    /* ... tus estilos anteriores ... */
+}
+
+/* Botón de borrar lista */
+.delete-list-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ff4d6d; /* Rojo */
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    /* Oculto por defecto para que quede más limpio */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Mostrar al pasar el ratón por encima de la tarjeta */
+.list-card:hover .delete-list-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delete-list-btn:hover {
+    background-color: #ff4d6d;
+    color: white;
+    transform: scale(1.1);
+}

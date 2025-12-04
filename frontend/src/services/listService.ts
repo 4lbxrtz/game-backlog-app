@@ -39,7 +39,27 @@ export const listService = {
 
   // Add a specific game to a specific list
   async addGameToList(listId: number, igdbId: number) {
-    const response = await api.post(`/api/list/${listId}/games`, { igdbId });
+    const response = await api.post(`/api/list/${listId}/game`, { igdbId });
+    return response.data;
+  },
+
+  async updateList(listId: number, name: string, description: string) {
+    const response = await api.put(`/api/list/${listId}`, {
+      name,
+      description,
+    });
+    return response.data;
+  },
+
+  // NUEVO: Eliminar juego de lista
+  async removeGameFromList(listId: number, gameId: number) {
+    const response = await api.delete(`/api/list/${listId}/game/${gameId}`);
+    return response.data;
+  },
+
+  // (Opcional) Si quieres borrar la lista entera también
+  async deleteList(listId: number) {
+    const response = await api.delete(`/api/list/${listId}`);
     return response.data;
   },
 };
