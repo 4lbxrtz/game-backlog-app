@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import TextInput from '../components/forms/TextInput'
 import { Link } from 'react-router-dom'
+import NavigationHeaderModal from '../components/NavigationHeaderModal'
 
 type GameResult = {
   id: number
@@ -58,10 +59,7 @@ export default function Search() {
   return (
     <div className="search-container">
       <div className="logo-section">
-        <div className="logo">
-          <span className="logo-icon">🎮</span>
-          <span>GameTracker</span>
-        </div>
+        <NavigationHeaderModal />
         <p className="logo-tagline">Busca juegos</p>
       </div>
 

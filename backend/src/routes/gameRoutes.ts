@@ -6,6 +6,7 @@ import { deleteGameFromCollectionController } from "../controllers/gameControlle
 import { getUserRatingController } from "../controllers/gameController";
 import { getRatingController } from "../controllers/gameController";
 import { changeUserRatingController } from "../controllers/gameController";
+import { getCountRatingsController } from "../controllers/gameController";
 import { authenticate } from "../middleware/auth";
 
 const router = express.Router();
@@ -18,4 +19,5 @@ router.delete("/:id", authenticate, deleteGameFromCollectionController);
 router.get("/:gameId/rating/user", authenticate, getUserRatingController);
 router.get("/:gameId/rating", authenticate, getRatingController);
 router.put("/:gameId/rating/user", authenticate, changeUserRatingController);
+router.get("/:gameId/rating/counts", authenticate, getCountRatingsController);
 export default router;

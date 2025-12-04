@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listService, type CustomList } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal';
+import NavigationHeaderModal from '../components/NavigationHeaderModal';
 import './List.css';
 
 export function List() {
@@ -78,10 +79,7 @@ export function List() {
     return (
         <div className="container">
             <header>
-                <a href="#" className="logo">
-                    <span className="logo-icon">🎮</span>
-                    <span>GameTracker</span>
-                </a>
+                <NavigationHeaderModal />
                 <div className="user-section">
                     <div className="avatar">JD</div>
                 </div>
@@ -141,8 +139,6 @@ export function List() {
                             <div className="list-info">
                                 <div className="list-header">
                                     <div className="list-name">{list.name}</div>
-                                    {/* Assuming all personal lists are private/public logic isn't in DB yet, using placeholder */}
-                                    <div className="list-privacy">🔓 Pública</div> 
                                 </div>
                                 <div className="list-meta">
                                     {list.game_count || 0} juegos

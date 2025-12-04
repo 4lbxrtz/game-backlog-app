@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { authService } from '../services/authService'
 import { useAuth } from '../hooks/useAuth'
+import NavigationHeaderModal from '../components/NavigationHeaderModal'
 
 interface Stats {
     completed: number
@@ -114,10 +115,7 @@ function Dashboard() {
     return (
         <div className="container">
             <header>
-                <div className="logo">
-                    <span className="logo-icon">🎮</span>
-                    <span>GameTracker</span>
-                </div>
+                <NavigationHeaderModal />
                 <div className="user-section">
                     <button className="add-button" onClick={() => navigate('/search')}>
                         Añadir juego

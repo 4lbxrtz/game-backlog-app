@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { listService, type CustomList, type ListGame } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal'; // Reuse this for Editing
+import NavigationHeaderModal from '../components/NavigationHeaderModal';
 import '../views/ListDetail.css';
 
 export function ListDetail() {
@@ -84,10 +85,7 @@ export function ListDetail() {
     return (
         <div className="container">
             <header>
-                <a href="#" className="logo">
-                    <span className="logo-icon">🎮</span>
-                    <span>GameTracker</span>
-                </a>
+                <NavigationHeaderModal />
                 <button className="back-button" onClick={() => navigate('/list')}>
                     ← Volver a Listas
                 </button>
@@ -97,23 +95,11 @@ export function ListDetail() {
                 <div className="list-main-info">
                     <div className="list-header-row">
                         <h1 className="list-title">{list.name}</h1>
-                        <div className="list-privacy-badge">
-                            <span>🔓</span>
-                            <span>Pública</span>
-                        </div>
                     </div>
                     <p className="list-description">
                         {list.description || "Sin descripción."}
                     </p>
                     <div className="list-meta-row">
-                        <div className="meta-item">
-                            <span>💬</span>
-                            <span>0 Comentarios</span>
-                        </div>
-                        <div className="meta-item">
-                            <span>❤️</span>
-                            <span>0 Likes</span>
-                        </div>
                         <div className="meta-item">
                             <span>📅</span>
                             <span>{totalGames} juegos en total</span>
@@ -211,7 +197,8 @@ export function ListDetail() {
                                     background: 'rgba(0,0,0,0.8)', padding: '2px 6px', borderRadius: '4px', fontSize: '12px'
                                 }}>
                                     {game.status === 'Completed' ? '✓' : 
-                                     game.status === 'Playing' ? '▶' : '📚'}
+                                     game.status === 'Playing' ? '▶' :
+                                     game.status === "Backlog" ? '📚' : '📋'}
                                 </div>
                             )}
                         </div>

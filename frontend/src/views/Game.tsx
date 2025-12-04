@@ -8,7 +8,9 @@ import { LogModal } from '../components/LogModal'
 import { ListSelectorModal } from '../components/ListSelectorModal';
 import RatingModal from '../components/RatingModal';
 import GameRatingModal from '../components/GameRatingModal';
+import NavigationHeaderModal from '../components/NavigationHeaderModal'
 import './Game.css'
+import BarCountModal from '../components/BarCountModal'
 
 interface Game {
     id: number
@@ -43,6 +45,7 @@ function Game() {
     const [editingLog, setEditingLog] = useState<Log | null>(null); // <--- NEW STATE
     const [userRating, setUserRating] = useState<number | null>(null); // NEW STATE for user rating
     const [rating, setRating] = useState<Rating | null>(null); // NEW STATE for user rating
+    const [countRatingsData, setCountRatings] = useState<{ counts: Array<{ personal_rating: number; count: number }> } | null>(null); // NEW STATE for count of ratings
 
 
     // Helper to format dates (e.g., "2024-01-15" -> "Enero 2024")
@@ -95,6 +98,11 @@ function Game() {
                 console.log('Game rating fetched:', rating)
                 console.log('Average rating:', rating ? rating.average : 'N/A')
                 console.log("Rating count:", rating ? rating.count : 'N/A')
+
+                // 6. Fetch Count of Ratings
+                const countRatingsData = await gameService.getCountRatings(Number(id))
+                setCountRatings(countRatingsData);
+                console.log('Count of ratings fetched:', countRatingsData)
             } catch (error) {
                 console.error('Error loading game data:', error)
             } finally {
@@ -164,10 +172,7 @@ function Game() {
     return (
     <div className="container">
         <header>
-            <a href="#" className="logo">
-                <span className="logo-icon">🎮</span>
-                <span>GameTracker</span>
-            </a>
+            <NavigationHeaderModal/>
             <button className="back-button" onClick={() => navigate('/dashboard')}>← Volver</button>
         </header>
 
@@ -199,43 +204,7 @@ function Game() {
                         <GameRatingModal rating={rating !== null && rating.average !== null ? rating.average : 0} />
                         <div className="rating-count">Basado en {rating !== null ? rating.count : "N/A"} valoraciones</div>
                     </div>
-                    <div className="rating-bars">
-                        <div className="rating-bar-row">
-                            <span className="rating-bar-label">5★</span>
-                            <div className="rating-bar-track">
-                                <div className="rating-bar-fill"></div>
-                            </div>
-                            <span className="rating-bar-count">847</span>
-                        </div>
-                        <div className="rating-bar-row">
-                            <span className="rating-bar-label">4★</span>
-                            <div className="rating-bar-track">
-                                <div className="rating-bar-fill"></div>
-                            </div>
-                            <span className="rating-bar-count">274</span>
-                        </div>
-                        <div className="rating-bar-row">
-                            <span className="rating-bar-label">3★</span>
-                            <div className="rating-bar-track">
-                                <div className="rating-bar-fill"></div>
-                            </div>
-                            <span className="rating-bar-count">87</span>
-                        </div>
-                        <div className="rating-bar-row">
-                            <span className="rating-bar-label">2★</span>
-                            <div className="rating-bar-track">
-                                <div className="rating-bar-fill"></div>
-                            </div>
-                            <span className="rating-bar-count">25</span>
-                        </div>
-                        <div className="rating-bar-row">
-                            <span className="rating-bar-label">1★</span>
-                            <div className="rating-bar-track">
-                                <div className="rating-bar-fill"></div>
-                            </div>
-                            <span className="rating-bar-count">14</span>
-                        </div>
-                    </div>
+                    <BarCountModal countRatingsData={countRatingsData} />
                 </div>
                 <div className="action-buttons">
                         <button className="btn-primary" onClick={handleCreateClick}>

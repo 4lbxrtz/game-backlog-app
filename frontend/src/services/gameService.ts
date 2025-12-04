@@ -55,6 +55,9 @@ export const gameService = {
       rating,
     });
     return response.data;
-  }
-
+  },
+  async getCountRatings(gameId: number) {
+    const response = await api.get(`/api/games/${gameId}/rating/counts`);
+    return response.data;
+  },
 };

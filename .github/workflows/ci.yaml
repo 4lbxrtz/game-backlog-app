@@ -84,6 +84,13 @@ jobs:
       # ----- RUN TESTS -----
       - name: Run unit tests (backend + frontend)
         run: npm run test
+      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # ----- DEBUGGING -----
       # CHANGE 4: If tests fail, print the server logs to the console

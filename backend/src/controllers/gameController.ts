@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getGameDetails, searchIGDB } from "../services/igdbService";
-import { searchGamesInDatabase } from "../models/gameModel";
+import { getCountRatings, searchGamesInDatabase } from "../models/gameModel";
 import {
   gameExists,
   storeGameMetadata,
@@ -80,6 +80,27 @@ export async function getGameController(req: Request, res: Response) {
   } catch (error) {
     console.error("Get game error:", error);
     res.status(500).json({ error: "Failed to get game details" });
+  }
+}
+
+export async function getCountRatingsController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const gameId = parseInt(req.params.gameId);
+
+    if (isNaN(gameId)) {
+      return res.status(400).json({ error: "Invalid game ID" });
+    }
+
+    const counts = await getCountRatings(gameId);
+
+    // Return the counts (or null if not found)
+    res.json({ counts: counts || null });
+  } catch (error) {
+    console.error("Get count ratings error:", error);
+    res.status(500).json({ error: "Failed to get count ratings" });
   }
 }
 

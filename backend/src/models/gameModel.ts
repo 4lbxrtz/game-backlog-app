@@ -147,6 +147,18 @@ export async function getRating(
   return rows[0];
 }
 
+export async function getCountRatings(
+  gameId: number
+): Promise<RowDataPacket[]> {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    `SELECT personal_rating, COUNT(*) AS count FROM user_games 
+     WHERE game_id = ? AND personal_rating IS NOT NULL group BY personal_rating`,
+    [gameId]
+  );
+
+  return rows;
+}
+
 export async function updateUserRating(
   userId: number,
   gameId: number,
