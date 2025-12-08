@@ -3,7 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { listService, type CustomList, type ListGame } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal';
 import NavigationHeaderModal from '../components/NavigationHeaderModal';
+import SettingsModal from '../components/SettingsModal'
 import '../views/ListDetail.css';
+import { Footer } from '../components/Footer';
 
 export function ListDetail() {
     const { id } = useParams<{ id: string }>();
@@ -100,6 +102,7 @@ export function ListDetail() {
                 <button className="back-button" onClick={() => navigate('/list')}>
                     ← Volver a Listas
                 </button>
+                <SettingsModal />
             </header>
 
             <div className="list-hero">
@@ -112,6 +115,9 @@ export function ListDetail() {
                          {/* ... (Meta items iguales) ... */}
                         <div className="meta-item"><span>📅</span><span>{totalGames} juegos</span></div>
                     </div>
+                    <button className="add-button" onClick={() => navigate('/search')}>
+                        Añadir juego
+                    </button>
                 </div>
 
                 <div className="list-sidebar">
@@ -197,21 +203,31 @@ export function ListDetail() {
 
                         <div className="game-cover">
                             {game.cover_url ? (
-                                <img src={game.cover_url} alt={game.title} style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                                <img src={game.cover_url} alt={game.title}/>
                             ) : (
                                 <div style={{width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background:'#333'}}>🎮</div>
                             )}
                             
                             {/* Status Badge */}
                             {game.status && (
-                                <div className="status-badge" style={{position: 'absolute', top: 5, right: 5, background: 'rgba(0,0,0,0.8)', padding: '2px 6px', borderRadius: '4px', fontSize: '12px'}}>
-                                    {game.status === 'Completed' ? '✓' : game.status === 'Playing' ? '▶' : '📚'}
+                                <div className="status-badge">
+                                    {game.status === 'Completed' ? '✓' : game.status === 'Playing' ? '🎮' : game.status === 'Wishlist' ? '📋' : '📚'}
                                 </div>
                             )}
                         </div>
                         <div className="game-title">{game.title}</div>
                     </div>
                 ))}
+                <div 
+                    className="game-card add-game-placeholder"
+                    onClick={() => navigate('/search')}
+                    title="Añadir un juego nuevo a esta lista"
+                >
+                    <div className="game-cover add-game-cover-content">
+                        <span className="plus-icon">+</span>
+                    </div>
+                    <div className="game-title" style={{color: '#888'}}>Añadir juego</div>
+                </div>
             </div>
 
             {/* MODAL CONFIGURADO PARA EDICIÓN */}
@@ -222,6 +238,7 @@ export function ListDetail() {
                 // PASAMOS LOS DATOS ACTUALES PARA QUE SE RELLENEN
                 initialData={{ name: list.name, description: list.description || '' }}
             />
+            <Footer />
         </div>
     );
 }

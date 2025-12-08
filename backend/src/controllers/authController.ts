@@ -11,6 +11,10 @@ import {
   getUserStats,
   getWishlistGames,
   getCompletedGames,
+  getUserById,
+  updateUsername,
+  updatePassword,
+  deleteUser,
 } from "../models/userModel";
 import { hashPassword, comparePassword, generateToken } from "../utils/auth";
 import { UserRegistration, UserLogin } from "../types";
@@ -139,15 +143,15 @@ export async function getDashboard(req: Request, res: Response): Promise<void> {
       return;
     }
     // Get all dashboard data in parallel (faster!)
-    const [stats, currentlyPlaying, backlog, lists, wishlist, completed] = await Promise.all([
-      getUserStats(userId),
-      getCurrentlyPlayingGames(userId, 4),
-      getBacklogGames(userId, 8),
-      getUserLists(userId),
-      getWishlistGames(userId, 8),
-      getCompletedGames(userId, 8),
-
-    ]);
+    const [stats, currentlyPlaying, backlog, lists, wishlist, completed] =
+      await Promise.all([
+        getUserStats(userId),
+        getCurrentlyPlayingGames(userId, 4),
+        getBacklogGames(userId, 8),
+        getUserLists(userId),
+        getWishlistGames(userId, 8),
+        getCompletedGames(userId, 8),
+      ]);
 
     res.json({
       user: {
@@ -166,5 +170,91 @@ export async function getDashboard(req: Request, res: Response): Promise<void> {
   } catch (error) {
     console.error("Get dashboard error:", error);
     res.status(500).json({ error: "Failed to load dashboard" });
+  }
+}
+
+export async function updateProfileController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    const { username } = req.body;
+
+    if (!username || username.trim().length < 3) {
+      return res
+        .status(400)
+        .json({
+          error: "El nombre de usuario debe tener al menos 3 caracteres",
+        });
+    }
+
+    // Verificar si el nombre ya existe
+    const exists = await usernameExists(username);
+    if (exists) {
+      // Verificamos si es el mismo usuario
+      const currentUser = await getUserById(userId);
+      if (currentUser.username !== username) {
+        return res
+          .status(409)
+          .json({ error: "Este nombre de usuario ya está en uso" });
+      }
+    }
+
+    await updateUsername(userId, username);
+    res.json({ message: "Perfil actualizado correctamente", username });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ error: "Error al actualizar perfil" });
+  }
+}
+
+// Actualizar Contraseña
+export async function updatePasswordController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 8) {
+      return res
+        .status(400)
+        .json({
+          error: "La nueva contraseña debe tener al menos 8 caracteres",
+        });
+    }
+
+    // 1. Obtener usuario para comprobar la contraseña actual
+    const user = await getUserById(userId);
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    // 2. Verificar contraseña actual
+    const validPassword = await comparePassword(
+      currentPassword,
+      user.password_hash
+    );
+    if (!validPassword) {
+      return res
+        .status(401)
+        .json({ error: "La contraseña actual es incorrecta" });
+    }
+
+    // 3. Hashear nueva contraseña
+    const hash = await hashPassword(newPassword);
+
+    // 4. Guardar
+    await updatePassword(userId, hash);
+    res.json({ message: "Contraseña actualizada correctamente" });
+  } catch (error) {
+    console.error("Update password error:", error);
+    res.status(500).json({ error: "Error al actualizar contraseña" });
+  }
+}
+
+// Eliminar Cuenta
+export async function deleteAccountController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    await deleteUser(userId);
+    res.json({ message: "Cuenta eliminada correctamente" });
+  } catch (error) {
+    console.error("Delete account error:", error);
+    res.status(500).json({ error: "Error al eliminar la cuenta" });
   }
 }

@@ -4,7 +4,9 @@ import { listService, type CustomList } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal';
 import { DeleteListModal } from '../components/DeleteListModal'; // <--- IMPORTAR
 import NavigationHeaderModal from '../components/NavigationHeaderModal';
+import SettingsModal from '../components/SettingsModal'
 import './List.css';
+import { Footer } from '../components/Footer';
 
 export function List() {
     const navigate = useNavigate();
@@ -84,6 +86,8 @@ export function List() {
             {/* ... (Header y Controls Bar igual que antes) ... */}
             <header>
                 <NavigationHeaderModal />
+                <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
+                <SettingsModal />
             </header>
 
             <div className="page-header">
@@ -153,6 +157,7 @@ export function List() {
                 onConfirm={handleConfirmDelete}
                 listName={listToDelete?.name || ''}
             />
+            <Footer />
         </div>
     );
 }

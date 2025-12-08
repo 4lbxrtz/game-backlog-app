@@ -24,16 +24,16 @@ export const gameService = {
     return response.data;
   },
 
+  async getUserGames(status?: string) {
+    // Si status es null o undefined, trae todos
+    const params = status ? { status } : {};
+    const response = await api.get("/api/games", { params });
+    return response.data;
+  },
+
   async getStatus(gameId: number) {
     const response = await api.get(`/api/games/${gameId}/status`);
     return response.data.status;
-  },
-
-  async rate(gameId: number, rating: number) {
-    const response = await api.put(`/api/user-games/${gameId}/rating`, {
-      rating,
-    });
-    return response.data;
   },
 
   async deleteFromCollection(gameId: number) {

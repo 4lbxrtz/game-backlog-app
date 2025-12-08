@@ -117,6 +117,7 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 120px;
 }
 
 .list-sidebar {
@@ -509,4 +510,85 @@ header {
 .game-card:hover .delete-game-btn:hover {
     background-color: rgba(255, 77, 109, 0.9) !important;
     transform: scale(1.1);
+
+}
+
+.status-badge {
+    position: absolute; 
+    top: 5px; 
+    right: 5px; 
+    background: rgba(0,0,0,0.8); 
+    padding: 2px 6px; 
+    border-radius: 4px; 
+    font-size: 12px;
+}
+
+.game-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.add-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    width: 120px;
+    
+}
+
+.add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Estilos específicos para la tarjeta placeholder */
+.add-game-placeholder {
+    border: 2px dashed #444; /* Borde discontinuo sutil */
+    background-color: transparent !important; /* Fondo transparente */
+    transition: all 0.2s ease;
+}
+
+.add-game-placeholder:hover {
+    border-color: #ff4d6d; /* Color primario al pasar el ratón */
+    transform: translateY(-5px);
+    background-color: rgba(255, 77, 109, 0.05) !important;
+}
+
+.add-game-cover-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent !important; /* Asegurar que no tenga fondo gris */
+}
+
+.plus-icon {
+    font-size: 3rem;
+    color: #444;
+    transition: color 0.2s ease;
+    font-weight: 300;
+}
+
+.add-game-placeholder:hover .plus-icon {
+    color: #ff4d6d;
+    transform: scale(1.1);
+}
+
+/* Ajuste para que se vea bien en modo lista también */
+.games-grid.view-list .add-game-placeholder {
+    border: 1px dashed #444;
+    height: 80px; /* Misma altura que las cards en modo lista */
+}
+
+.games-grid.view-list .add-game-placeholder:hover {
+    border-color: #ff4d6d;
 }

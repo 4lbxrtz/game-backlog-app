@@ -23,7 +23,7 @@ router.put("/:id", updateListController); // Update list info
 router.delete("/:id", deleteListController); // Delete list
 
 // List contents (Games)
-router.post("/:id/games", addGameToListController); // Add game to list
-router.delete("/:id/games/:gameId", removeGameFromListController); // Remove game from list
+router.post("/:id/game", addGameToListController); // Add game to list
+router.delete("/:id/game/:gameId", removeGameFromListController); // Remove game from list
 
 export default router;

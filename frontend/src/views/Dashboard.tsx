@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { authService } from '../services/authService'
 import { useAuth } from '../hooks/useAuth'
 import NavigationHeaderModal from '../components/NavigationHeaderModal'
+import SettingsModal from '../components/SettingsModal'
+import { Footer } from '../components/Footer'
+
 
 interface Stats {
     completed: number
@@ -43,7 +46,7 @@ interface DashboardData {
 function Dashboard() {
     const navigate = useNavigate()
 
-    const { user, loading: authLoading, logout } = useAuth()
+    const { user, loading: authLoading } = useAuth()
 
 
     const [data, setData] = useState<DashboardData | null>(null)
@@ -76,21 +79,6 @@ function Dashboard() {
         }
     }
 
-    function handleLogout() {
-        logout()
-        navigate('/login')
-    }
-
-    // Get user initials for avatar
-    function getUserInitials(username: string): string {
-        return username
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase()
-            .substring(0, 2)
-    }
-
     if (loading) {
         return (
             <div className="container">
@@ -120,9 +108,7 @@ function Dashboard() {
                     <button className="add-button" onClick={() => navigate('/search')}>
                         Añadir juego
                     </button>
-                    <div className="avatar" onClick={handleLogout} style={{ cursor: 'pointer' }} title="Cerrar sesión">
-                        {getUserInitials(data.user.username)}
-                    </div>
+                    <SettingsModal />
                 </div>
             </header>
 
@@ -133,22 +119,39 @@ function Dashboard() {
 
             <div className="stats-container">
                 <div className="stats-bar">
-                    <div className="stat-item">
+                    {/* Hacemos clickables los items y mandamos el nombre exacto del TAB */}
+                    <div 
+                        className="stat-item clickable" 
+                        onClick={() => navigate('/status/played')}
+                    >
                         <div className="stat-label">Completados</div>
                         <div className="stat-value">{data.stats.completed}</div>
                     </div>
-                    <div className="stat-item">
+                    
+                    <div 
+                        className="stat-item clickable" 
+                        onClick={() => navigate('/status/playing')}
+                    >
                         <div className="stat-label">Jugando</div>
                         <div className="stat-value">{data.stats.playing}</div>
                     </div>
-                    <div className="stat-item">
+                    
+                    <div 
+                        className="stat-item clickable" 
+                        onClick={() => navigate('/status/backlog')}
+                    >
                         <div className="stat-label">Backlog</div>
                         <div className="stat-value">{data.stats.backlog}</div>
                     </div>
-                    <div className="stat-item">
+                    
+                    <div 
+                        className="stat-item clickable" 
+                        onClick={() => navigate('/status/wishlist')}
+                    >
                         <div className="stat-label">Wishlist</div>
                         <div className="stat-value">{data.stats.wishlist}</div>
                     </div>
+                    
                     <div className="stat-item">
                         <div className="stat-label">Puntuación media</div>
                         <div className="stat-value">{data.stats.averageRating}</div>
@@ -160,7 +163,13 @@ function Dashboard() {
                 <div className="section">
                     <div className="section-header">
                         <h2 className="section-title">Jugando actualmente</h2>
-                        <a href="#" className="view-all">Ver todos →</a>
+                        <a 
+                            href="#" 
+                            onClick={(e) => { e.preventDefault(); navigate('/status/Playing'); }} 
+                            className="view-all"
+                        >
+                            Ver todos →
+                        </a>
                     </div>
                     <div className="game-grid">
                         {data.currentlyPlaying.length > 0 ? (
@@ -212,7 +221,13 @@ function Dashboard() {
             <div className="section backlog-section">
                 <div className="section-header">
                     <h2 className="section-title">Backlog</h2>
-                    <a href="#" className="view-all">Ver todos →</a>
+                    <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); navigate('/status/backlog'); }} 
+                        className="view-all"
+                    >
+                        Ver todos →
+                    </a>
                 </div>
                 <div className="game-grid">
                     {data.backlog.length > 0 ? (
@@ -239,7 +254,13 @@ function Dashboard() {
             <div className="section">
                     <div className="section-header">
                         <h2 className="section-title">Completados</h2>
-                        <a href="#" className="view-all">Ver todos →</a>
+                        <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); navigate('/status/Played'); }} 
+                        className="view-all"
+                    >
+                        Ver todos →
+                    </a>
                     </div>
                     <div className="game-grid">
                         {data.completed.length > 0 ? (
@@ -266,7 +287,13 @@ function Dashboard() {
                 <div className="section">
                     <div className="section-header">
                         <h2 className="section-title">Lista de deseados</h2>
-                        <a href="#" className="view-all">Ver todos →</a>
+                        <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); navigate('/status/Wishlist'); }} 
+                        className="view-all"
+                    >
+                        Ver todos →
+                    </a>
                     </div>
                     <div className="game-grid">
                         {data.wishlist.length > 0 ? (
@@ -289,6 +316,7 @@ function Dashboard() {
                         )}
                     </div>
                 </div>
+                <Footer />
         </div>
     )
 }

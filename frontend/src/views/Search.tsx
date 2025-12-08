@@ -1,10 +1,13 @@
 import './Search.css'
 import '../components/forms/forms.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import TextInput from '../components/forms/TextInput'
 import { Link } from 'react-router-dom'
 import NavigationHeaderModal from '../components/NavigationHeaderModal'
+import SettingsModal from '../components/SettingsModal'
+import { Footer } from '../components/Footer'
 
 type GameResult = {
   id: number
@@ -26,7 +29,18 @@ export default function Search() {
   const [results, setResults] = useState<GameResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const location = useLocation()
   const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000'
+
+  // Restore previous search state when coming back with location state
+  useEffect(() => {
+    const state = location.state as { query?: string; results?: GameResult[] } | null
+    if (state?.query) {
+      setQuery(state.query)
+      setResults(state.results ?? [])
+    }
+  }, [location.state])
 
   async function handleSearch(e?: React.FormEvent) {
     if (e) e.preventDefault()
@@ -58,10 +72,12 @@ export default function Search() {
 
   return (
     <div className="search-container">
-      <div className="logo-section">
+      <header className="logo-section">
         <NavigationHeaderModal />
-        <p className="logo-tagline">Busca juegos</p>
-      </div>
+        <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
+        <SettingsModal />
+      </header>
+      <p className="logo-tagline">Busca juegos</p>
 
       <div className="search-card">
         <div className="card-header">
@@ -93,7 +109,9 @@ export default function Search() {
           <div className="game-grid">
             {results.map((g) => (
               <div key={g.id} className="game-card">
-                <Link to={`/game/${g.id}`}><div className="game-cover">{g.cover_url ? <img src={g.cover_url} alt={g.name} /> : 'Portada'}</div> </Link>
+                <Link to={`/game/${g.id}`} state={{ from: 'search', query, results }}>
+                  <div className="game-cover">{g.cover_url ? <img src={g.cover_url} alt={g.name} /> : 'Portada'}</div>
+                </Link>
                 <div className="game-title">{g.name}</div>
                 {g.summary && <div className="game-summary">{g.summary.slice(0, 120)}{g.summary.length > 120 ? '…' : ''}</div>}
               </div>
@@ -101,6 +119,7 @@ export default function Search() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

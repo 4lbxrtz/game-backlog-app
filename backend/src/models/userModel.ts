@@ -59,6 +59,35 @@ export async function emailExists(email: string): Promise<boolean> {
   return rows.length > 0;
 }
 
+export async function getUserById(id: number): Promise<any> {
+  const [rows] = await pool.query<RowDataPacket[]>(
+    "SELECT * FROM users WHERE id = ?",
+    [id]
+  );
+  return rows[0];
+}
+
+// Actualizar Username
+export async function updateUsername(id: number, newUsername: string): Promise<void> {
+  await pool.query(
+    "UPDATE users SET username = ? WHERE id = ?",
+    [newUsername, id]
+  );
+}
+
+// Actualizar Contraseña
+export async function updatePassword(id: number, passwordHash: string): Promise<void> {
+  await pool.query(
+    "UPDATE users SET password_hash = ? WHERE id = ?",
+    [passwordHash, id]
+  );
+}
+
+// Eliminar Cuenta
+export async function deleteUser(id: number): Promise<void> {
+  await pool.query("DELETE FROM users WHERE id = ?", [id]);
+}
+
 // Check if username exists
 export async function usernameExists(username: string): Promise<boolean> {
   const [rows] = await pool.query<RowDataPacket[]>(
@@ -244,4 +273,34 @@ export async function removeGameFromCollection(
     WHERE user_id = ? AND game_id = ?`,
     [userId, gameId]
   );
+}
+
+export async function getUserGamesByStatus(userId: number, status?: string): Promise<any[]> {
+  let query = `
+    SELECT 
+      g.id, 
+      g.title, 
+      g.cover_url, 
+      g.release_date, 
+      ug.status, 
+      ug.personal_rating,
+      ug.added_at
+    FROM user_games ug
+    JOIN games g ON ug.game_id = g.id
+    WHERE ug.user_id = ?
+  `;
+
+  const params: any[] = [userId];
+
+  // Si nos pasan un estado específico, filtramos. Si no, devolvemos todo.
+  if (status && status !== 'All') {
+    query += " AND ug.status = ?";
+    params.push(status);
+  }
+
+  // Ordenamos por fecha de actualización (los más recientes primero por defecto)
+  query += " ORDER BY ug.updated_at DESC";
+
+  const [rows] = await pool.query<RowDataPacket[]>(query, params);
+  return rows;
 }

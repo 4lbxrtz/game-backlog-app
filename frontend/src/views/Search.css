@@ -70,3 +70,11 @@
 .game-title {
     color: white;
 }
+
+.logo-tagline {
+    text-align: center;
+    color: #888;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}

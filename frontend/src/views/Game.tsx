@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { gameService } from '../services/gameService'
 import StatusSelector from '../components/StatusSelector'
@@ -11,6 +11,9 @@ import GameRatingModal from '../components/GameRatingModal';
 import NavigationHeaderModal from '../components/NavigationHeaderModal'
 import './Game.css'
 import BarCountModal from '../components/BarCountModal'
+import SettingsModal from '../components/SettingsModal'
+import { Footer } from '../components/Footer'
+
 
 interface Game {
     id: number
@@ -41,9 +44,21 @@ interface LogInput {
   review?: string;
 }
 
+type FromSearchState = {
+    from?: string
+    query?: string
+    results?: {
+        id: number
+        name: string
+        cover_url?: string | null
+        summary?: string | null
+    }[]
+}
+
 
 function Game() {
     const navigate = useNavigate()
+    const location = useLocation()
 
     const { id } = useParams<{ id?: string }>()
 
@@ -64,6 +79,17 @@ function Game() {
         if (!dateStr) return '';
         const date = new Date(dateStr);
         return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    }
+
+    const formatDateOnly = (dateStr?: string) => {
+        if (!dateStr) return ''
+        const date = new Date(dateStr)
+        if (Number.isNaN(date.getTime())) return dateStr
+        return date.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        })
     }
 
     // Helper to format date range
@@ -180,11 +206,22 @@ function Game() {
         return <div>Juego no encontrado.</div>
     }
 
+    const fromSearch = (location.state as FromSearchState | null) ?? null
+
+    const handleBack = () => {
+        if (fromSearch?.from === 'search') {
+            navigate('/search', { state: { query: fromSearch.query ?? '', results: fromSearch.results ?? [] } })
+        } else {
+            navigate(-1)
+        }
+    }
+
     return (
     <div className="container">
         <header>
             <NavigationHeaderModal/>
-            <button className="back-button" onClick={() => navigate('/dashboard')}>← Volver</button>
+            <button className="back-button" type="button" onClick={handleBack}> ← Volver </button>
+            <SettingsModal />
         </header>
 
         <div className="game-hero">
@@ -202,7 +239,7 @@ function Game() {
                 <div className="game-meta">
                     <span className="meta-item">{game?.genres.map((genre) => genre.name).join(', ')}</span>
                     <span className="meta-item">{game?.platforms.map((platform) => platform.name).join(', ')}</span>
-                    <span className="meta-item">{game?.release_date}</span>
+                    <span className="meta-item">{formatDateOnly(game?.release_date)}</span>
                 </div>
                 <p className="game-description">
                     {game?.description}
@@ -311,6 +348,7 @@ function Game() {
                 onClose={() => setIsListModalOpen(false)}
                 gameId={game.id}
             />
+            <Footer />
     </div>
     )
 }

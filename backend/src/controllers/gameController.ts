@@ -14,6 +14,7 @@ import {
   insertGameIntoCollection,
   updateGameStatus,
   removeGameFromCollection,
+  getUserGamesByStatus,
 } from "../models/userModel";
 
 // Search games from IGDB (no database storage yet)
@@ -83,10 +84,7 @@ export async function getGameController(req: Request, res: Response) {
   }
 }
 
-export async function getCountRatingsController(
-  req: Request,
-  res: Response
-) {
+export async function getCountRatingsController(req: Request, res: Response) {
   try {
     const gameId = parseInt(req.params.gameId);
 
@@ -198,10 +196,7 @@ export async function deleteGameFromCollectionController(
   }
 }
 
-export async function getUserRatingController(
-  req: Request,
-  res: Response
-) {
+export async function getUserRatingController(req: Request, res: Response) {
   try {
     const userId = req.user!.userId;
     const gameId = parseInt(req.params.gameId);
@@ -222,10 +217,7 @@ export async function getUserRatingController(
   }
 }
 
-export async function changeUserRatingController(
-  req: Request,
-  res: Response
-) {
+export async function changeUserRatingController(req: Request, res: Response) {
   try {
     const userId = req.user!.userId;
     const gameId = parseInt(req.params.gameId);
@@ -235,11 +227,7 @@ export async function changeUserRatingController(
       return res.status(400).json({ error: "Invalid game ID" });
     }
 
-    if (
-      typeof rating !== "number" ||
-      rating < 0 ||
-      rating > 5
-    ) {
+    if (typeof rating !== "number" || rating < 0 || rating > 5) {
       return res
         .status(400)
         .json({ error: "Rating must be a number between 0 and 5" });
@@ -255,10 +243,7 @@ export async function changeUserRatingController(
   }
 }
 
-export async function getRatingController(
-  req: Request,
-  res: Response
-) {
+export async function getRatingController(req: Request, res: Response) {
   try {
     const gameId = parseInt(req.params.gameId);
 
@@ -273,5 +258,19 @@ export async function getRatingController(
   } catch (error) {
     console.error("Get rating error:", error);
     res.status(500).json({ error: "Failed to get game rating" });
+  }
+}
+
+export async function getUserCollectionController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    const status = req.query.status as string; // Puede ser undefined
+
+    const games = await getUserGamesByStatus(userId, status);
+
+    res.json(games);
+  } catch (error) {
+    console.error("Get collection error:", error);
+    res.status(500).json({ error: "Failed to fetch user collection" });
   }
 }
