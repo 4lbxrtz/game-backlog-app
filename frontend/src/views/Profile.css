@@ -391,3 +391,232 @@ header {
         gap: 20px;
     }
 }
+
+.rating-bar-fill {
+    height: 100%;
+    background-color: #ff4d6d; /* Your accent color */
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+}
+
+.year-bar {
+    width: 100%;
+    background-color: #ff4d6d;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s ease-out;
+    min-height: 4px; /* Ensure tiny bars are visible */
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.games-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.games-row .game-card {
+    min-width: 120px;
+    width: 120px;
+}
+
+.year-chart {
+    display: flex;
+    align-items: flex-end; /* Alinea las barras al fondo */
+    justify-content: center; /* Centra las barras si hay pocas */
+    gap: 15px; /* Espacio entre barras */
+    height: 150px; /* ALTURA FIJA IMPORTANTE */
+    padding-bottom: 10px;
+    margin-top: 1rem;
+    border-bottom: 1px solid #333; /* Línea base del gráfico opcional */
+}
+
+.year-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    width: 40px; /* Ancho de la columna invisible */
+}
+
+.year-bar {
+    width: 100%; /* Ocupa el ancho del container (40px) */
+    background-color: #ff4d6d;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
+    min-height: 4px; /* Para que siempre se vea algo aunque sea 0 */
+    position: relative;
+    cursor: pointer;
+}
+
+/* Tooltip simple al pasar el ratón */
+.year-bar:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.year-bar:hover {
+    filter: brightness(1.2);
+}
+
+.year-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.charts-grid-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Donut Chart Styles */
+.donut-chart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.donut-chart {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.donut-hole {
+    width: 90px;
+    height: 90px;
+    background-color: #1a1a1a; /* Match card background */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.donut-total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    line-height: 1;
+}
+
+.donut-label {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* Legend Colors */
+.status-completed { background-color: #4ade80; }
+.status-playing { background-color: #60a5fa; }
+.status-backlog { background-color: #ff4d6d; }
+.status-wishlist { background-color: #fbbf24; }
+.status-abandoned { background-color: #9ca3af; }
+
+/* Decade Bar Specifics */
+.decade-bar {
+    background-color: #60a5fa; /* Blue for contrast vs the Pink year bars */
+}
+
+.stats-dashboard-grid {
+    display: grid;
+    /* Esto crea columnas que se adaptan. 
+       Mínimo 350px de ancho, si hay espacio sobran se expanden (1fr) */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem; /* Espacio extra al final antes del footer */
+}
+
+/* Opcional: Para que todas las tarjetas tengan la misma altura visual */
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; 
+    min-height: 250px; /* Asegura una altura mínima uniforme */
+}
+
+/* Ajuste para móviles: en pantallas pequeñas una sola columna */
+@media (max-width: 768px) {
+    .stats-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Ajuste específico para la tarjeta de plataformas para que no se vea desordenada */
+.platform-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem; /* Espacio entre los "chips" de plataformas */
+    justify-content: center; /* Centrar los items */
+}
+
+.platform-tag {
+    background-color: #252525;
+    color: #eee;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.platform-tag:hover {
+    border-color: #ff4d6d;
+    background-color: rgba(255, 77, 109, 0.1);
+}

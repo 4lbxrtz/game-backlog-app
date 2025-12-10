@@ -1,5 +1,5 @@
 import express from "express";
-import { addGameToCollectionController, getUserCollectionController, searchGamesController } from "../controllers/gameController";
+import { addGameToCollectionController, getUserCollectionController, getUserProfileController, searchGamesController } from "../controllers/gameController";
 import { getGameController as getGameController } from "../controllers/gameController";
 import { getStatusController } from "../controllers/gameController";
 import { deleteGameFromCollectionController } from "../controllers/gameController";
@@ -21,4 +21,5 @@ router.get("/:gameId/rating/user", authenticate, getUserRatingController);
 router.get("/:gameId/rating", authenticate, getRatingController);
 router.put("/:gameId/rating/user", authenticate, changeUserRatingController);
 router.get("/:gameId/rating/counts", authenticate, getCountRatingsController);
+router.get("/profile/stats", authenticate, getUserProfileController);
 export default router;

@@ -60,4 +60,8 @@ export const gameService = {
     const response = await api.get(`/api/games/${gameId}/rating/counts`);
     return response.data;
   },
+  async getProfileStats() {
+    const response = await api.get("/api/games/profile/stats");
+    return response.data;
+  },
 };

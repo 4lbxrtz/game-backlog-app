@@ -15,6 +15,7 @@ import {
   updateGameStatus,
   removeGameFromCollection,
   getUserGamesByStatus,
+  getUserProfileStats,
 } from "../models/userModel";
 
 // Search games from IGDB (no database storage yet)
@@ -272,5 +273,16 @@ export async function getUserCollectionController(req: Request, res: Response) {
   } catch (error) {
     console.error("Get collection error:", error);
     res.status(500).json({ error: "Failed to fetch user collection" });
+  }
+}
+
+export async function getUserProfileController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.userId;
+    const stats = await getUserProfileStats(userId);
+    res.json(stats);
+  } catch (error) {
+    console.error("Profile stats error:", error);
+    res.status(500).json({ error: "Failed to fetch profile stats" });
   }
 }

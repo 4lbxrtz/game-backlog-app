@@ -78,7 +78,6 @@ export function ListDetail() {
     // SVG Config
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
     // --- ORDENACIÓN ---
