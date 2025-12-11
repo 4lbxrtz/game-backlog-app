@@ -229,6 +229,7 @@ export function Settings() {
                     </div>
                 </div>
             </div>
+            <span style={{ display: 'block', height: '20px' }}></span>
             <Footer />
         </div>
     );

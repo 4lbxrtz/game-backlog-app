@@ -75,8 +75,11 @@ export function ListDetail() {
     const completedGames = games.filter(g => g.status === 'Completed').length;
     const percentage = totalGames > 0 ? Math.round((completedGames / totalGames) * 100) : 0;
     
-    // SVG Config
-    const radius = 45;
+    // UPDATED SVG Config (Smaller size)
+    const size = 80; // Total width/height
+    const center = size / 2; // 40
+    const strokeWidth = 6;
+    const radius = 32; // Smaller radius
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
@@ -101,6 +104,9 @@ export function ListDetail() {
                 <button className="back-button" onClick={() => navigate('/list')}>
                     ← Volver a Listas
                 </button>
+                <button className="add-button" onClick={() => navigate('/search')}>
+                        Añadir juego
+                    </button>
                 <SettingsModal />
             </header>
 
@@ -112,60 +118,56 @@ export function ListDetail() {
                     <p className="list-description">{list.description || "Sin descripción."}</p>
                     <div className="list-meta-row">
                          {/* ... (Meta items iguales) ... */}
-                        <div className="meta-item"><span>📅</span><span>{totalGames} juegos</span></div>
                     </div>
-                    <button className="add-button" onClick={() => navigate('/search')}>
-                        Añadir juego
-                    </button>
+                    
                 </div>
 
                 <div className="list-sidebar">
-                    <div className="sidebar-card">
+                    <div className="sidebar-card compact-sidebar"> {/* Added 'compact-sidebar' class */}
                         <button className="btn-edit" onClick={() => setIsEditModalOpen(true)}>
                             Editar Lista
                         </button>
                         
-                        {/* AQUÍ ESTABA EL PROBLEMA: Faltaba el SVG o no usaba las variables */}
-                        <div className="stats-section">
-                            <div className="stats-title">Has completado</div>
+                        <div className="stats-section horizontal-stats"> {/* Added 'horizontal-stats' class */}
                             
-                            <div className="progress-circle">
-                                {/* El gráfico SVG */}
-                                <svg className="progress-ring" width="120" height="120">
-                                    {/* Círculo de fondo (gris) */}
+                            <div className="stats-info">
+                                <div className="stats-title">Progreso</div>
+                                <div className="stats-label">
+                                    <span style={{color: '#fff', fontSize: '1.2rem', fontWeight: '500'}}>
+                                        {completedGames}/{totalGames}
+                                    </span> 
+                                    <span style={{fontSize: '0.9rem', marginLeft: '4px'}}>juegos</span>
+                                </div>
+                            </div>
+                            
+                            <div className="progress-circle compact">
+                                <svg className="progress-ring" width={size} height={size}>
                                     <circle 
                                         className="progress-ring-circle" 
                                         stroke="#333" 
-                                        strokeWidth="8" 
+                                        strokeWidth={strokeWidth} 
                                         fill="transparent"
-                                        cx="60" 
-                                        cy="60" 
+                                        cx={center} 
+                                        cy={center} 
                                         r={radius}
                                     />
-                                    
-                                    {/* Círculo de progreso (color) - AQUÍ SE USAN LAS VARIABLES */}
                                     <circle 
                                         className="progress-ring-circle-fill" 
                                         stroke="#ff4d6d" 
-                                        strokeWidth="8" 
+                                        strokeWidth={strokeWidth} 
                                         fill="transparent"
-                                        cx="60" 
-                                        cy="60" 
+                                        cx={center} 
+                                        cy={center} 
                                         r={radius}
                                         strokeDasharray={`${circumference} ${circumference}`}
                                         style={{ strokeDashoffset }} 
                                         strokeLinecap="round"
-                                        transform="rotate(-90 60 60)" 
+                                        transform={`rotate(-90 ${center} ${center})`} 
                                     />
                                 </svg>
-                                
-                                {/* Texto del porcentaje en el centro */}
-                                <div className="progress-text">{percentage}%</div>
+                                <div className="progress-text compact-text">{percentage}%</div>
                             </div>
 
-                            <div className="stats-label">
-                                {completedGames} / {totalGames} juegos
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,6 +239,7 @@ export function ListDetail() {
                 // PASAMOS LOS DATOS ACTUALES PARA QUE SE RELLENEN
                 initialData={{ name: list.name, description: list.description || '' }}
             />
+            <span style={{ display: 'block', height: '20px' }}></span>
             <Footer />
         </div>
     );

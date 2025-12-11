@@ -14,6 +14,7 @@ export interface ProfileStats {
   totalMinutesPlayed: number; // New
   statusDistribution: { status: string; count: number }[]; // New
   gamesPerDecade: { decade: number; count: number }[]; // New
+  lists: { id: number; name: string; game_count: number }[]; // New
 }
 
 // Create a new user
@@ -348,10 +349,10 @@ export async function getUserProfileStats(
     // 2. Rating Distribution (Group by rounded rating)
     const [ratings] = await connection.query<RowDataPacket[]>(
       `
-      SELECT FLOOR(personal_rating) as rating, COUNT(*) as count
+      SELECT personal_rating as rating, COUNT(*) as count
       FROM user_games 
-      WHERE user_id = ? AND personal_rating IS NOT NULL
-      GROUP BY FLOOR(personal_rating)
+      WHERE user_id = ? AND personal_rating IS NOT NULL AND personal_rating > 0
+      GROUP BY personal_rating
       ORDER BY rating DESC
     `,
       [userId]
@@ -447,6 +448,19 @@ export async function getUserProfileStats(
       [userId]
     );
 
+    const [lists] = await connection.query<RowDataPacket[]>(
+      `
+      SELECT l.id, l.name, COUNT(lg.game_id) as game_count
+      FROM lists l
+      LEFT JOIN list_games lg ON l.id = lg.list_id
+      WHERE l.user_id = ?
+      GROUP BY l.id
+      ORDER BY game_count DESC
+      LIMIT 4
+    `,
+      [userId]
+    );
+
     return {
       totalPlayed: counts[0]?.totalPlayed || 0,
       backlogCount: counts[0]?.backlogCount || 0,
@@ -459,6 +473,7 @@ export async function getUserProfileStats(
       totalMinutesPlayed: playtime[0]?.totalMinutes || 0,
       statusDistribution: statuses as any[],
       gamesPerDecade: decades as any[],
+      lists: lists as any[],
     };
   } finally {
     connection.release();

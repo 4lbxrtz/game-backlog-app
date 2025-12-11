@@ -61,10 +61,10 @@ header {
 
 .list-hero {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 1fr 280px; /* Reduced from 350px to 280px */
     gap: 40px;
     padding: 0 20px;
-    margin-bottom: 50px;
+    margin-bottom: 30px; /* Reduced margin */
 }
 
 .list-main-info {
@@ -133,19 +133,26 @@ header {
     padding: 25px;
 }
 
+.sidebar-card.compact-sidebar {
+    padding: 20px; /* Reduced padding */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 .btn-edit {
     width: 100%;
     background: #FC6399;
     color: #ffffff;
     border: none;
-    padding: 12px 24px;
+    padding: 10px 0;
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
     box-shadow: 0 4px 15px rgba(252, 99, 153, 0.3);
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .btn-edit:hover {
@@ -157,11 +164,38 @@ header {
     text-align: center;
 }
 
+.stats-section.horizontal-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left; /* Reset center align */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    margin-top: 5px;
+}
+
 .stats-title {
-    font-size: 13px;
-    color: #909090;
-    margin-bottom: 15px;
-    font-weight: 400;
+    margin-bottom: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stats-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.progress-circle.compact {
+    width: 80px;
+    height: 80px;
+    margin: 0; /* Reset margin */
+}
+
+.progress-text.compact-text {
+    font-size: 18px; /* Smaller font */
+    font-weight: 500;
 }
 
 .progress-circle {
@@ -188,9 +222,8 @@ header {
     stroke: #FC6399;
     fill: transparent;
     stroke-width: 8;
-    stroke-dasharray: 283;
-    stroke-dashoffset: 210;
     transition: stroke-dashoffset 0.5s ease;
+    stroke-linecap: round;
 }
 
 .progress-text {
@@ -591,4 +624,37 @@ header {
 
 .games-grid.view-list .add-game-placeholder:hover {
     border-color: #ff4d6d;
+}
+
+/* Add to ListDetail.css */
+
+@media (max-width: 900px) {
+    .list-hero {
+        grid-template-columns: 1fr; /* Stack on mobile */
+    }
+    
+    .list-sidebar {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+    }
+
+    /* On mobile, keep the horizontal layout but allow it to be wider */
+    .sidebar-card.compact-sidebar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .btn-edit {
+        width: auto;
+        padding: 10px 30px;
+    }
+
+    .stats-section.horizontal-stats {
+        border-top: none;
+        padding-top: 0;
+        margin-top: 0;
+        gap: 30px;
+    }
 }

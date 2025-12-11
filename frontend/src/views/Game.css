@@ -463,6 +463,10 @@ header {
     line-height: 1.7;
     color: #b0b0b0;
     margin-bottom: 15px;
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    margin-top: 15px;
 }
 
 .log-tags {
@@ -514,6 +518,53 @@ header {
     }
 }
 
+.game-meta .meta-item {
+  width: auto;
+  max-width: none;
+}
+
+@media (max-width: 850px) {
+    .game-hero {
+        flex-direction: column; /* Stack vertically */
+    }
+
+    .cover-section {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 2rem auto; /* Center image */
+    }
+
+    .game-info {
+        padding-left: 0; /* Remove left padding */
+    }
+
+    .game-title-main {
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    .game-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .action-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Stack the logs */
+    .log-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .log-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
 @media (max-width: 568px) {
     .game-title-main {
         font-size: 28px;
@@ -526,9 +577,15 @@ header {
     .btn-primary, .btn-secondary {
         width: 100%;
     }
-}
 
-.game-meta .meta-item {
-  width: auto;
-  max-width: none;
+    .log-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .icon-btn {
+        font-size: 1rem;
+        padding: 0.2rem 0.3rem;
+    }
 }

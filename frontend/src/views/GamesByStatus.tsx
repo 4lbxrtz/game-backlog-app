@@ -92,6 +92,7 @@ export function GamesByStatus() {
             <header>
                 <NavigationHeaderModal />
                 <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
+                <button className="add-button" onClick={() => navigate('/search')}>Añadir juego</button>
                 <SettingsModal />
             </header>
 

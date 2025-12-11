@@ -1,253 +1,286 @@
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    line-height: 1.6;
+}
 
-        .login-container {
-            width: 100%;
-            max-width: 450px;
-            margin: auto;
-        }
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+}
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+.logo-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
 
-        .logo {
-            font-size: 28px;
-            font-weight: 500;
-            color: #ffffff;
-            letter-spacing: -0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
+.logo {
+    font-size: 28px;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
 
-        .logo-icon {
-            font-size: 32px;
-        }
+.logo-icon {
+    font-size: 32px;
+}
 
-        .logo-tagline {
-            font-size: 15px;
-            color: #707070;
-            font-weight: 300;
-        }
+.logo-tagline {
+    font-size: 15px;
+    color: #707070;
+    font-weight: 300;
+}
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 8px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
+.login-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
-        .card-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
+.card-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
 
-        .card-title {
-            font-size: 24px;
-            font-weight: 500;
-            color: #ffffff;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
+.card-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
 
-        .card-subtitle {
-            font-size: 14px;
-            color: #909090;
-            font-weight: 300;
-        }
+.card-subtitle {
+    font-size: 14px;
+    color: #909090;
+    font-weight: 300;
+}
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+.form-group {
+    margin-bottom: 25px;
+}
 
-        .form-label {
-            display: block;
-            font-size: 13px;
-            color: #909090;
-            margin-bottom: 10px;
-            font-weight: 400;
-        }
+.form-label {
+    display: block;
+    font-size: 13px;
+    color: #909090;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
 
-        .form-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
 
-        .form-input:focus {
-            outline: none;
-            border-color: #FC6399;
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 3px rgba(252, 99, 153, 0.1);
-        }
+.form-input:focus {
+    outline: none;
+    border-color: #FC6399;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(252, 99, 153, 0.1);
+}
 
-        .form-input::placeholder {
-            color: #505050;
-        }
+.form-input::placeholder {
+    color: #505050;
+}
 
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            font-size: 13px;
-        }
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 13px;
+}
 
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
 
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: #FC6399;
-        }
+.checkbox-wrapper input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #FC6399;
+}
 
-        .checkbox-label {
-            color: #909090;
-            font-weight: 300;
-        }
+.checkbox-label {
+    color: #909090;
+    font-weight: 300;
+}
 
-        .forgot-link {
-            color: #909090;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-weight: 300;
-        }
+.forgot-link {
+    color: #909090;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 300;
+}
 
-        .forgot-link:hover {
-            color: #ffffff;
-        }
+.forgot-link:hover {
+    color: #ffffff;
+}
 
-        .btn-login {
-            width: 100%;
-            background: #FC6399;
-            color: #ffffff;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(252, 99, 153, 0.3);
-            margin-bottom: 20px;
-        }
+.btn-login {
+    width: 100%;
+    background: #FC6399;
+    color: #ffffff;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(252, 99, 153, 0.3);
+    margin-bottom: 20px;
+}
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(252, 99, 153, 0.4);
-        }
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(252, 99, 153, 0.4);
+}
 
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 30px 0;
-        }
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 30px 0;
+}
 
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.06);
-        }
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+}
 
-        .divider-text {
-            color: #707070;
-            font-size: 13px;
-            font-weight: 300;
-        }
+.divider-text {
+    color: #707070;
+    font-size: 13px;
+    font-weight: 300;
+}
 
-        .social-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
+.social-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
 
-        .btn-social {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.03);
-            color: #e0e0e0;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+.btn-social {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
 
-        .btn-social:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.05);
-        }
+.btn-social:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+}
 
-        .register-prompt {
-            text-align: center;
-            font-size: 14px;
-            color: #909090;
-            font-weight: 300;
-        }
+.register-prompt {
+    text-align: center;
+    font-size: 14px;
+    color: #909090;
+    font-weight: 300;
+}
 
-        .register-link {
-            color: #FC6399;
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s ease;
-        }
+.register-link {
+    color: #FC6399;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
 
-        .register-link:hover {
-            opacity: 0.8;
-        }
+.register-link:hover {
+    opacity: 0.8;
+}
 
-        @media (max-width: 568px) {
-            .login-card {
-                padding: 30px 25px;
-            }
+@media (max-width: 568px) {
+    body {
+        padding: 15px;
+    }
 
-            .logo-section {
-                margin-bottom: 40px;
-            }
+    .login-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
 
-            .card-title {
-                font-size: 22px;
-            }
+    .login-card {
+        padding: 25px 20px;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+    }
 
-            .social-buttons {
-                flex-direction: column;
-            }
-        }
+    .logo-section {
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .logo-icon {
+        font-size: 28px;
+    }
+
+    .card-title {
+        font-size: 20px;
+    }
+
+    .card-header {
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .social-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

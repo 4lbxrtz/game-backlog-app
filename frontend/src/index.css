@@ -66,3 +66,47 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem; /* Less padding on mobile */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Fix Modals on Mobile */
+    .modal-content {
+        width: 95% !important; /* Take full width minus margins */
+        max-height: 90vh; /* Prevent overflow vertically */
+        overflow-y: auto; /* Scroll inside modal if needed */
+        padding: 1.5rem !important;
+    }
+
+    /* Stack form inputs in modals */
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* Reset basic box sizing globally */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Prevents the "displaced to the right" scroll */
+}
+
+/* Fix the main container for mobile */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px; /* Reduce padding on mobile */
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+}

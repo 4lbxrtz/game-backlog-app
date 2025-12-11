@@ -9,22 +9,24 @@ body {
     background: #0a0a0a;
     color: #e0e0e0;
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 20px 10px;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 .container {
     max-width: 1300px;
     margin: 0 auto;
+    width: 100%;
 }
 
 header {
-    margin-bottom: 60px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0 20px 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    align-items: center; /* Vertically center items */
+    width: 100%;
+    margin-bottom: 2rem;
+    flex-wrap: nowrap; /* Prevent stacking */
 }
 
 .logo {
@@ -41,10 +43,16 @@ header {
     font-size: 24px;
 }
 
+/* Fix the User Section / Right side of header */
 .user-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px; /* Space between elements */
+}
+
+.back-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
 }
 
 .add-button {
@@ -82,7 +90,8 @@ header {
 .greeting {
     text-align: center;
     margin-bottom: 50px;
-    padding: 0 20px;
+    padding: 0 10px;
+    width: 100%;
 }
 
 .greeting-text {
@@ -102,18 +111,20 @@ header {
 .stats-container {
     max-width: 1000px;
     margin: 0 auto 70px;
-    padding: 40px;
+    padding: 30px 20px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    width: 100%;
 }
 
 .stats-bar {
     display: flex;
     justify-content: space-around;
-    gap: 40px;
+    gap: 20px;
+    width: 100%;
 }
 
 .stat-item {
@@ -138,8 +149,8 @@ header {
 
 .section {
     margin-bottom: 60px;
-    padding: 0 20px;
-    
+    padding: 0 10px;
+    width: 100%;
 }
 
 .section-header {
@@ -171,8 +182,9 @@ header {
 
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    width: 100%;
 }
 
 .game-card {
@@ -210,21 +222,42 @@ header {
 .main-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 60px;
+    gap: 30px;
     padding: 0;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.dashboard-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 60px; /* Espacio vertical entre Jugando y Completados */
+}
+
+/* IMPORTANTE: Resetear márgenes dentro de las columnas para que el gap controle el espacio */
+.dashboard-left-column .section, 
+.main-content .section {
+    margin-bottom: 0;
 }
 
 .main-content:div {
     padding: 0px;
 }
 
+.main-content .section {
+    margin-bottom: 0;
+}
+
 .lists-section {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 8px;
-    padding: 30px;
+    padding: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     height: fit-content;
+    margin-bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .custom-lists {
@@ -276,38 +309,175 @@ header {
 @media (max-width: 968px) {
     .main-content {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .stats-bar {
-        gap: 20px;
+        gap: 15px;
         flex-wrap: wrap;
     }
 
     .stat-item {
-        min-width: 120px;
+        min-width: 100px;
+    }
+
+    header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .user-section {
+        gap: 5px;
+    }
+
+    .add-button {
+        padding: 8px 15px;
+        font-size: 13px;
     }
 }
 
 @media (max-width: 568px) {
+    body {
+        padding: 10px 0;
+        overflow-x: visible;
+    }
+
+    #root {
+        padding: 0;
+        width: 100%;
+    }
+
+    .container {
+        padding: 0 5px;
+        overflow: visible;
+    }
+
     .stats-container {
-        padding: 30px 20px;
+        padding: 15px 5px;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     .stats-bar {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+        gap: 5px;
+    }
+
+    .main-content {
+        gap: 10px;
+        overflow: hidden;
+        width: 100%;
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dashboard-left-column {
+        gap: 20px;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dashboard-left-column .section,
+    .main-content .section {
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dashboard-left-column .game-grid,
+    .main-content .game-grid {
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .lists-section {
+        padding: 8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        overflow: hidden;
+        border-width: 1px;
+    }
+
+    .custom-lists {
+        overflow: hidden;
+        width: 100%;
     }
 
     .game-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 20px;
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        gap: 10px;
+        padding-bottom: 10px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .game-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .game-card {
+        flex: 0 0 135px;
+        min-width: 135px;
+        max-width: 135px;
+        scroll-snap-align: start;
+    }
+
+    .greeting {
+        padding: 0 5px;
+        margin-bottom: 20px;
     }
 
     .greeting-text {
-        font-size: 26px;
+        font-size: 20px;
+    }
+
+    .section {
+        padding: 0;
+        margin-bottom: 30px;
+        overflow: visible;
+    }
+
+    .lists-section {
+        padding: 10px;
+        width: calc(100% - 10px);
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0 5px;
+    }
+
+    header {
+        margin-bottom: 1rem;
+        padding: 0 5px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .logo-icon {
+        font-size: 20px;
+    }
+
+    .add-button {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
+
 .stat-item.clickable {
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
@@ -317,4 +487,38 @@ header {
 .stat-item.clickable:hover {
     background-color: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
+}
+
+/* Add to Dashboard.css */
+
+@media (max-width: 768px) {
+    .stats-container {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .stats-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns */
+        gap: 10px;
+        background: transparent; /* Remove background if it looks heavy */
+        padding: 0;
+    }
+
+    .stat-item {
+        background-color: #1a1a1a; /* Add card background */
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        margin: 0; /* Remove margins */
+        /* Remove the borders you had for desktop */
+        border-right: 1px solid #333; 
+        border-bottom: 1px solid #333;
+    }
+    
+    /* Make the "Average Rating" span full width at the bottom */
+    .stat-item:last-child {
+        grid-column: span 2; 
+    }
 }

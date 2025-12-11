@@ -27,6 +27,85 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.rating-bars.compact {
+    gap: 6px; /* Reduce gap between rows */
+}
+
+.rating-row.compact {
+    gap: 8px;
+}
+
+.rating-label {
+    font-size: 11px; /* Smaller font for numbers */
+    color: #909090;
+    min-width: 28px; /* Fixed width to align bars */
+    text-align: right;
+}
+
+.rating-bar.compact {
+    height: 6px; /* Thinner bars */
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    flex: 1;
+}
+
+.rating-bar-fill {
+    /* Keep existing fill styles */
+    border-radius: 3px;
+}
+
+/* --- SIDEBAR LISTS --- */
+.sidebar-lists-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.sidebar-lists-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-list-item:last-child {
+    border-bottom: none;
+}
+
+.sidebar-list-item:hover {
+    padding-left: 5px;
+    padding-right: 5px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border-bottom-color: transparent;
+}
+
+.sidebar-list-name {
+    font-size: 14px;
+    color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-list-count {
+    font-size: 12px;
+    color: #707070;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
 .logo {
     font-size: 22px;
     font-weight: 500;
@@ -619,4 +698,38 @@ header {
 .platform-tag:hover {
     border-color: #ff4d6d;
     background-color: rgba(255, 77, 109, 0.1);
+}
+
+@media (max-width: 900px) {
+    .profile-hero {
+        flex-direction: column; /* Stack Sidebar and Main */
+        align-items: center;
+    }
+
+    .profile-sidebar {
+        width: 100%; /* Full width */
+        max-width: 400px; /* But not too wide */
+        margin-bottom: 2rem;
+        text-align: center; /* Center text for mobile */
+    }
+
+    /* Center the avatar in the stacked view */
+    .profile-avatar {
+        margin: 0 auto 1rem auto;
+    }
+
+    /* Adjust the grid for stats to be single column on small screens */
+    .stats-dashboard-grid {
+        grid-template-columns: 1fr; /* Force single column */
+    }
+
+    /* Allow the stats overview (top 3 boxes) to wrap */
+    .stats-overview {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stat-box {
+        flex: 1 1 140px; /* Grow, shrink, min-width 140px */
+    }
 }

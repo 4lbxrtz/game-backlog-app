@@ -272,7 +272,7 @@ function Game() {
 
         <div className="section">
                 <div className="section-header">
-                    <h2 className="section-title">Mis pasadas ({logs.length})</h2>
+                    <h2 className="section-title">Mis partidas ({logs.length})</h2>
                 </div>
                 
                 <div className="logs-container">

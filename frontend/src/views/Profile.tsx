@@ -19,6 +19,7 @@ interface ProfileData {
     totalMinutesPlayed: number;
     statusDistribution: { status: string; count: number }[];
     gamesPerDecade: { decade: number; count: number }[];
+    lists: { id: number; name: string; game_count: number }[];
 }
 
 export function Profile() {
@@ -27,6 +28,7 @@ export function Profile() {
     
     const [stats, setStats] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState(true);
+    const ratingSteps = Array.from({ length: 10 }, (_, i) => (50 - i * 5) / 10);
 
     useEffect(() => {
         async function loadProfile() {
@@ -135,20 +137,40 @@ export function Profile() {
                     </div>
                     
                     <div className="rating-distribution">
-                        <h3 className="rating-title">Valoraciones Personales</h3>
-                        <div className="rating-bars">
-                            {[5, 4, 3, 2, 1].map(star => (
-                                <div className="rating-row" key={star}>
+                        <h3 className="rating-title">Valoraciones</h3>
+                        <div className="rating-bars compact">
+                            {ratingSteps.map(star => (
+                                <div className="rating-row compact" key={star}>
                                     <span className="rating-label">{star}★</span>
-                                    <div className="rating-bar">
+                                    <div className="rating-bar compact">
                                         <div 
                                             className="rating-bar-fill" 
                                             style={{width: `${getRatingPercentage(star)}%`}}
-                                            title={`${Math.round(getRatingPercentage(star))}%`}
                                         ></div>
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                    <div className="sidebar-lists-section">
+                        <h3 className="rating-title">Mis Listas</h3>
+                        <div className="sidebar-lists-container">
+                            {stats?.lists && stats.lists.length > 0 ? (
+                                stats.lists.map(list => (
+                                    <div 
+                                        key={list.id} 
+                                        className="sidebar-list-item"
+                                        onClick={() => navigate(`/list/${list.id}`)}
+                                    >
+                                        <div className="sidebar-list-name">
+                                            <span>📋</span> {list.name}
+                                        </div>
+                                        <div className="sidebar-list-count">{list.game_count}</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div style={{color: '#666', fontSize: '13px'}}>Sin listas creadas</div>
+                            )}
                         </div>
                     </div>
                 </div>

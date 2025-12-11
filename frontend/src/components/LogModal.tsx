@@ -5,6 +5,7 @@ import './LogModal.css';
 interface LogModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: (data: any) => Promise<void>;
   platforms: { id?: number; name: string }[];
   initialData?: Log | null; // <--- NEW PROP
@@ -65,6 +66,7 @@ export function LogModal({ isOpen, onClose, onSubmit, platforms, initialData }: 
 
       await onSubmit(payload);
       onClose();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -82,7 +84,7 @@ export function LogModal({ isOpen, onClose, onSubmit, platforms, initialData }: 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>{initialData ? 'Editar Log' : 'Añadir Log'}</h2>
+        <h2>{initialData ? 'Editar log de partida' : 'Añadir log de partida'}</h2>
         <form onSubmit={handleSubmit}>
           {/* ... Same inputs as before ... */}
           <div className="form-group">

@@ -157,6 +157,7 @@ export function List() {
                 onConfirm={handleConfirmDelete}
                 listName={listToDelete?.name || ''}
             />
+            <span style={{ display: 'block', height: '20px' }}></span>
             <Footer />
         </div>
     );

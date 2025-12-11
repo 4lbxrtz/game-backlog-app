@@ -83,6 +83,8 @@ header {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    width: 50%;
+    margin: 0 auto;
 }
 
 .settings-section {
@@ -247,5 +249,19 @@ header {
     .btn-secondary,
     .btn-danger {
         width: 100%;
+    }
+    .settings-content {
+        padding: 0; /* Remove extra padding */
+    }
+
+    .section-title {
+        font-size: 1.5rem; /* Make font smaller */
+        white-space: nowrap; /* Try to keep in one line if possible */
+    }
+    
+    /* If it still breaks, let it break naturally but align left */
+    .settings-section h2 {
+        text-align: left;
+        line-height: 1.2;
     }
 }
