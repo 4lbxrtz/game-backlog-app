@@ -31,7 +31,7 @@ export async function gameExists(igdbId: number): Promise<boolean> {
 
 export async function searchGamesInDatabase(query: string): Promise<Game[]> {
   const [rows] = await pool.query<RowDataPacket[]>(
-    "SELECT * FROM games WHERE title LIKE ? LIMIT 20",
+    "SELECT * FROM games WHERE title LIKE ? LIMIT 40",
     [`%${query}%`]
   );
   return rows as Game[];
@@ -170,6 +170,21 @@ export async function updateUserRating(
      WHERE user_id = ? AND game_id = ?`,
     [rating, userId, gameId]
   );
+}
+
+// backend/src/models/gameModel.ts
+
+export async function getTrendingGamesFromDB(limit: number = 40): Promise<any[]> {
+  const [rows] = await pool.query<RowDataPacket[]>(`
+    SELECT g.id, g.title, g.cover_url, COUNT(ug.user_id) as popularity
+    FROM games g
+    JOIN user_games ug ON g.id = ug.game_id
+    GROUP BY g.id, g.title, g.cover_url
+    ORDER BY popularity DESC
+    LIMIT ?
+  `, [limit]);
+  
+  return rows;
 }
 
 // Main function: Store complete game metadata

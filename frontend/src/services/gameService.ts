@@ -64,4 +64,8 @@ export const gameService = {
     const response = await api.get("/api/games/profile/stats");
     return response.data;
   },
+  async getTrending() {
+    const response = await api.get("/api/games/trending");
+    return response.data;
+  },
 };

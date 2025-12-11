@@ -114,3 +114,5 @@ export async function getGameDetails(igdbId: number) {
     throw error;
   }
 }
+
+

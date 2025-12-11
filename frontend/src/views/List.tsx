@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { listService, type CustomList } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal';
 import { DeleteListModal } from '../components/DeleteListModal'; // <--- IMPORTAR
-import NavigationHeaderModal from '../components/NavigationHeaderModal';
-import SettingsModal from '../components/SettingsModal'
 import './List.css';
 import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
 export function List() {
     const navigate = useNavigate();
@@ -83,13 +82,7 @@ export function List() {
 
     return (
         <div className="container">
-            {/* ... (Header y Controls Bar igual que antes) ... */}
-            <header>
-                <NavigationHeaderModal />
-                <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
-                <SettingsModal />
-            </header>
-
+            <Navbar />
             <div className="page-header">
                 <h1 className="page-title">Mis Listas</h1>
                 <p className="page-subtitle">Organiza tus juegos en colecciones personalizadas</p>
@@ -137,7 +130,7 @@ export function List() {
                             </div>
                             <div className="list-info">
                                 <div className="list-meta">{list.game_count || 0} juegos</div>
-                                <div className="list-description">{list.description || "Sin descripción"}</div>
+                                <div className="list-description">{list.name || "Sin Nombre"}</div>
                             </div>
                         </div>
                     ))

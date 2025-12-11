@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { authService } from '../services/authService'
 import { useAuth } from '../hooks/useAuth'
-import NavigationHeaderModal from '../components/NavigationHeaderModal'
-import SettingsModal from '../components/SettingsModal'
 import { Footer } from '../components/Footer'
+import { Navbar } from '../components/Navbar'
 
 
 interface Stats {
@@ -99,27 +98,21 @@ function Dashboard() {
 
     return (
         <div className="container">
-            <header>
-                <NavigationHeaderModal />
-                <div className="user-section">
-                    <button className="add-button" onClick={() => navigate('/search')}>Añadir juego</button>
-                    <SettingsModal />
-                </div>
-            </header>
+            <Navbar />
 
             <div className="greeting">
                 <div className="greeting-text">Hola {data.user.username},</div>
-                <div className="greeting-subtext">¿qué título te gustaría explorar?</div>
+                <div className="greeting-subtext">¿qué juegos te gustaría explorar?</div>
             </div>
 
             <div className="stats-container">
                 <div className="stats-bar">
                     {/* ... (Tus items de estadísticas se mantienen igual) ... */}
-                     <div className="stat-item clickable" onClick={() => navigate('/status/played')}>
+                     <div className="stat-item clickable" onClick={() => navigate('/status/Completado')}>
                         <div className="stat-label">Completados</div>
                         <div className="stat-value">{data.stats.completed}</div>
                     </div>
-                    <div className="stat-item clickable" onClick={() => navigate('/status/playing')}>
+                    <div className="stat-item clickable" onClick={() => navigate('/status/Jugando')}>
                         <div className="stat-label">Jugando</div>
                         <div className="stat-value">{data.stats.playing}</div>
                     </div>
@@ -127,7 +120,7 @@ function Dashboard() {
                         <div className="stat-label">Backlog</div>
                         <div className="stat-value">{data.stats.backlog}</div>
                     </div>
-                    <div className="stat-item clickable" onClick={() => navigate('/status/wishlist')}>
+                    <div className="stat-item clickable" onClick={() => navigate('/status/Wishlist')}>
                         <div className="stat-label">Wishlist</div>
                         <div className="stat-value">{data.stats.wishlist}</div>
                     </div>
@@ -148,7 +141,7 @@ function Dashboard() {
                     <div className="section">
                         <div className="section-header">
                             <h2 className="section-title">Jugando actualmente</h2>
-                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/status/Playing'); }} className="view-all">Ver todos →</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/status/Jugando'); }} className="view-all">Ver todos →</a>
                         </div>
                         <div className="game-grid">
                             {data.currentlyPlaying.length > 0 ? (
@@ -170,7 +163,7 @@ function Dashboard() {
                     <div className="section">
                         <div className="section-header">
                             <h2 className="section-title">Completados recientemente</h2>
-                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/status/Played'); }} className="view-all">Ver todos →</a>
+                            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/status/Completado'); }} className="view-all">Ver todos →</a>
                         </div>
                         <div className="game-grid">
                             {data.completed.length > 0 ? (

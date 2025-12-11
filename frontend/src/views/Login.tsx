@@ -2,12 +2,10 @@ import './Login.css'
 import '../components/forms/forms.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import TextInput from '../components/forms/TextInput'
 import PasswordInput from '../components/forms/PasswordInput'
 import { authService } from '../services/authService'
-
-// const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000';
+import { useAuth } from '../hooks/useAuth' // <--- Import Hook
 
 function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -21,6 +19,7 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     
     const navigate = useNavigate()
+    const { loginAction } = useAuth() // <--- Destructure login function
 
     function validate() {
         const e: Record<string, string> = {}
@@ -46,44 +45,23 @@ export default function Login() {
         try {
             setLoading(true)
             
-            // const response =  await authService.login(email.trim(), password)
-            // const response = await axios.post(`${IP_BACKEND}/api/auth/login`, { email: email.trim(), password })
+            // 1. Call Service
             const { token, user } = await authService.login(email.trim(), password)
             
-            // Guardar token y usuario
-            if (rememberMe) {
-                localStorage.setItem('token', token)
-                localStorage.setItem('user', JSON.stringify(user))
-            } else {
-                // Si no marca "recordarme", usar sessionStorage
-                sessionStorage.setItem('token', token)
-                sessionStorage.setItem('user', JSON.stringify(user))
-            }
+            // 2. Update Global State via Hook
+            // This sets the axios header and localStorage, fixing the navigation bug
+            loginAction(token, user);
             
-            // Configurar axios
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            
-            // Redirigir al dashboard
+            // 3. Navigate
             navigate('/dashboard')
             
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                const errorData = err.response?.data
-                
-                if (errorData && typeof errorData === 'object') {
-                    const errorObj = errorData as Record<string, unknown>
-                    
-                    if (typeof errorObj.error === 'string') {
-                        // Mostrar error genérico (seguridad)
-                        setErrors({ general: 'Email o contraseña incorrectos' })
-                    } else {
-                        setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' })
-                    }
-                } else {
-                    setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' })
-                }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            const errorData = err.response?.data
+            if (errorData && errorData.error) {
+                setErrors({ general: 'Email o contraseña incorrectos' })
             } else {
-                setErrors({ general: 'Error de conexión. Verifica tu conexión a internet.' })
+                setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' })
             }
         } finally {
             setLoading(false)

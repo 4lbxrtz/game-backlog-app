@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { gameService } from '../services/gameService';
 import './GamesByStatus.css';
-import NavigationHeaderModal from '../components/NavigationHeaderModal'
-import SettingsModal from '../components/SettingsModal'
 import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
 // Definimos los tipos locales
 interface UserGame {
@@ -23,11 +22,11 @@ export function GamesByStatus() {
     
     // Mapeo de Tabs (Nombre Visual) -> Status DB
     const tabs = [
-        { label: 'Played', dbStatus: 'completed' },
-        { label: 'Playing', dbStatus: 'playing' },
+        { label: 'Completado', dbStatus: 'completed' },
+        { label: 'Jugando', dbStatus: 'playing' },
         { label: 'Backlog', dbStatus: 'backlog' },
         { label: 'Wishlist', dbStatus: 'wishlist' },
-        { label: 'Abandoned', dbStatus: 'abandoned' }
+        { label: 'Abandonado', dbStatus: 'abandoned' }
     ];
 
     // Inicializar el estado basándonos en la URL o por defecto 'Backlog'
@@ -89,12 +88,7 @@ export function GamesByStatus() {
 
     return (
         <div className="container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <header>
-                <NavigationHeaderModal />
-                <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
-                <button className="add-button" onClick={() => navigate('/search')}>Añadir juego</button>
-                <SettingsModal />
-            </header>
+            <Navbar />
 
             {/* Wrap the page content in a div that grows to fill space */}
             <div style={{ flex: 1 }}>

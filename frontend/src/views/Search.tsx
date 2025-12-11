@@ -1,13 +1,11 @@
 import './Search.css'
 import '../components/forms/forms.css'
-import { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios'
+import { useEffect, useState, useRef } from 'react'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import TextInput from '../components/forms/TextInput'
-import { Link } from 'react-router-dom'
-import NavigationHeaderModal from '../components/NavigationHeaderModal'
-import SettingsModal from '../components/SettingsModal'
 import { Footer } from '../components/Footer'
+import { gameService } from '../services/gameService'
+import { Navbar } from '../components/Navbar'
 
 type GameResult = {
   id: number
@@ -16,76 +14,99 @@ type GameResult = {
   summary?: string | null
 }
 
-type RawGame = {
-  id: number
-  title: string
-  cover?: { url?: string } | null
-  cover_url?: string | null
-  summary?: string | null
-}
-
 export default function Search() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<GameResult[]>([])
+  const [trending, setTrending] = useState<GameResult[]>([]) 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
+  
   const location = useLocation()
-  const IP_BACKEND = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000'
+  const navigate = useNavigate() // Added missing navigate hook
+  const searchTimeout = useRef<number | null>(null);
 
-  // Restore previous search state when coming back with location state
+  // 1. Load Trending on Mount
   useEffect(() => {
+    async function loadTrending() {
+      try {
+        const data = await gameService.getTrending();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mapped = data.map((g: any) => ({
+            id: g.id,
+            name: g.title,
+            cover_url: g.cover_url
+        }));
+        setTrending(mapped);
+      } catch (e) {
+        console.error("Error loading trending", e);
+      }
+    }
+    loadTrending();
+
     const state = location.state as { query?: string; results?: GameResult[] } | null
     if (state?.query) {
       setQuery(state.query)
       setResults(state.results ?? [])
     }
-  }, [location.state])
+  }, [location.state]) 
 
-  async function handleSearch(e?: React.FormEvent) {
-    if (e) e.preventDefault()
-    setError(null)
+  // 2. Search Logic (Debounced)
+  useEffect(() => {
     if (!query.trim()) {
-      setResults([])
-      return
+      setResults([]);
+      setLoading(false);
+      return;
     }
 
-    try {
-      setLoading(true)
-      // Backend endpoint expected to proxy IGDB search
-      const res = await axios.get(`${IP_BACKEND}/api/games/search`, { params: { q: query.trim() } })
-      const data = (res.data as unknown) as RawGame[]
-      const mapped: GameResult[] = (Array.isArray(data) ? data : []).map((g) => ({
-        id: g.id,
-        name: g.title,
-        cover_url: g.cover?.url ?? g.cover_url ?? null,
-        summary: g.summary ?? null,
-      }))
-      setResults(mapped)
-    } catch (err: unknown) {
-      console.error('Search error', err)
-      setError('Error buscando juegos')
-    } finally {
-      setLoading(false)
-    }
-  }
+    setLoading(true);
+
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+
+    searchTimeout.current = window.setTimeout(async () => {
+        try {
+            const data = await gameService.search(query.trim());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const mapped: GameResult[] = (Array.isArray(data) ? data : []).map((g: any) => ({
+                id: g.id,
+                name: g.title || g.name,
+                cover_url: g.cover?.url ?? g.cover_url ?? null,
+                summary: g.summary ?? null,
+            }));
+            setResults(mapped);
+            setError(null);
+        } catch (err) {
+            console.error(err);
+            setError("Error buscando juegos");
+        } finally {
+            setLoading(false);
+        }
+    }, 300);
+
+    return () => {
+        if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    };
+  }, [query]);
+
+  // --- LOGIC ---
+  const isSearching = query.trim().length > 0;
+  
+  // Choose which list to display
+  const displayGames = isSearching ? results : trending;
+  
+  // Only show "No results" if search finished and found nothing
+  const showNoResults = isSearching && !loading && results.length === 0;
 
   return (
     <div className="search-container">
-      <header className="logo-section">
-        <NavigationHeaderModal />
-        <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
-        <SettingsModal />
-      </header>
-      <p className="logo-tagline">Busca juegos</p>
+      <Navbar />
 
       <div className="search-card">
         <div className="card-header">
           <h1 className="card-title">Buscar juegos</h1>
-          <p className="card-subtitle">Escribe el título y pulsa buscar</p>
+          <p className="card-subtitle">Escribe para buscar automáticamente</p>
         </div>
 
-        <form className="search-form" onSubmit={handleSearch}>
+        <div className="search-form">
           <TextInput
             id="q"
             label="Buscar"
@@ -93,30 +114,48 @@ export default function Search() {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             placeholder="ej. Elden Ring"
             autoComplete="off"
+            autoFocus
           />
-          <div className="search-actions">
-            <button className="search-button" type="submit" disabled={loading}>
-              {loading ? 'Buscando...' : 'Buscar'}
-            </button>
-          </div>
-        </form>
+        </div>
 
         {error && <div className="form-error">{error}</div>}
 
         <div className="results-section">
-          {results.length === 0 && !loading && <div className="no-results">No hay resultados</div>}
+            
+            {/* Show No Results Message */}
+            {showNoResults && (
+                <div className="no-results">No se encontraron resultados</div>
+            )}
 
-          <div className="game-grid">
-            {results.map((g) => (
-              <div key={g.id} className="game-card">
-                <Link to={`/game/${g.id}`} state={{ from: 'search', query, results }}>
-                  <div className="game-cover">{g.cover_url ? <img src={g.cover_url} alt={g.name} /> : 'Portada'}</div>
-                </Link>
-                <div className="game-title">{g.name}</div>
-                {g.summary && <div className="game-summary">{g.summary.slice(0, 120)}{g.summary.length > 120 ? '…' : ''}</div>}
-              </div>
-            ))}
-          </div>
+            {/* UNIFIED GRID */}
+            {/* We apply opacity during loading to give feedback without layout shift */}
+            <div 
+                className="game-grid" 
+                style={{ 
+                    opacity: loading ? 0.5 : 1, 
+                    transition: 'opacity 0.2s ease' 
+                }}
+            >
+                {displayGames.map((g) => (
+                <div key={g.id} className="game-card">
+                    <Link to={`/game/${g.id}`} state={{ from: 'search', query, results }}>
+                    <div className="game-cover">
+                        {g.cover_url ? 
+                            <img src={g.cover_url} alt={g.name} loading="lazy" /> : 
+                            <div style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100%', width:'100%', color:'#666'}}>🎮</div>
+                        }
+                    </div>
+                    </Link>
+                    <div className="game-title">{g.name}</div>
+                </div>
+                ))}
+            </div>
+            
+            {/* Initial Loading State for Trending */}
+            {!isSearching && trending.length === 0 && (
+                <div className="no-results" style={{opacity: 0.5}}>Cargando populares...</div>
+            )}
+
         </div>
       </div>
       <Footer />

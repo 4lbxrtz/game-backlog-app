@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { listService, type CustomList, type ListGame } from '../services/listService';
 import { CreateListModal } from '../components/CreateListModal';
-import NavigationHeaderModal from '../components/NavigationHeaderModal';
-import SettingsModal from '../components/SettingsModal'
 import '../views/ListDetail.css';
 import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
 export function ListDetail() {
     const { id } = useParams<{ id: string }>();
@@ -99,16 +98,7 @@ export function ListDetail() {
 
     return (
         <div className="container">
-            <header>
-                <NavigationHeaderModal />
-                <button className="back-button" onClick={() => navigate('/list')}>
-                    ← Volver a Listas
-                </button>
-                <button className="add-button" onClick={() => navigate('/search')}>
-                        Añadir juego
-                    </button>
-                <SettingsModal />
-            </header>
+            <Navbar />
 
             <div className="list-hero">
                 <div className="list-main-info">

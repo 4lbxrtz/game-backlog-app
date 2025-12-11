@@ -1,5 +1,11 @@
 import express from "express";
-import { addGameToCollectionController, getUserCollectionController, getUserProfileController, searchGamesController } from "../controllers/gameController";
+import {
+  addGameToCollectionController,
+  getTrendingGamesController,
+  getUserCollectionController,
+  getUserProfileController,
+  searchGamesController,
+} from "../controllers/gameController";
 import { getGameController as getGameController } from "../controllers/gameController";
 import { getStatusController } from "../controllers/gameController";
 import { deleteGameFromCollectionController } from "../controllers/gameController";
@@ -12,6 +18,7 @@ import { authenticate } from "../middleware/auth";
 const router = express.Router();
 
 router.get("/", authenticate, getUserCollectionController);
+router.get("/trending", authenticate, getTrendingGamesController);
 router.get("/search", authenticate, searchGamesController);
 router.get("/:id", authenticate, getGameController);
 router.post("/collection", authenticate, addGameToCollectionController);

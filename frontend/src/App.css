@@ -41,3 +41,10 @@
 .read-the-docs {
   color: #888;
 }
+
+@media (max-width: 768px) {
+    body {
+        /* Add padding equal to bottom bar height + extra space */
+        padding-bottom: 80px !important; 
+    }
+}

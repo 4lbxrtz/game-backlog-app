@@ -98,3 +98,33 @@ CREATE TABLE list_games (
 -- Indexes for performance
 CREATE INDEX idx_user_games_user ON user_games(user_id);
 CREATE INDEX idx_user_games_status ON user_games(status);
+
+CREATE INDEX idx_user_games_game_id ON user_games(game_id);
+
+-- Índices compuestos en user_games
+CREATE INDEX idx_user_games_user_status 
+  ON user_games(user_id, status);
+
+CREATE INDEX idx_user_games_user_rating 
+  ON user_games(user_id, personal_rating);
+
+-- Índices en logs
+CREATE INDEX idx_logs_user_id 
+  ON logs(user_id);
+
+CREATE INDEX idx_logs_game_id 
+  ON logs(game_id);
+
+CREATE INDEX idx_logs_user_game 
+  ON logs(user_id, game_id);
+
+-- Índice en games para búsqueda
+CREATE INDEX idx_games_title 
+  ON games(title);
+
+-- Índices en lists y list_games
+CREATE INDEX idx_lists_user_id 
+  ON lists(user_id);
+
+CREATE INDEX idx_list_games_game_id 
+  ON list_games(game_id);

@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { gameService } from '../services/gameService';
-import NavigationHeaderModal from '../components/NavigationHeaderModal';
-import SettingsModal from '../components/SettingsModal';
 import { Footer } from '../components/Footer';
 import './Profile.css';
+import { Navbar } from '../components/Navbar';
 
 interface ProfileData {
     totalPlayed: number;
@@ -47,8 +46,14 @@ export function Profile() {
     // Helper to calculate bar width for ratings
     const getRatingPercentage = (star: number) => {
         if (!stats || !stats.ratings.length) return 0;
+        
         const totalRated = stats.ratings.reduce((acc, curr) => acc + curr.count, 0);
-        const ratingData = stats.ratings.find(r => r.rating === star);
+        
+        // --- CORRECCIÓN AQUÍ ---
+        // Convertimos r.rating a Number() porque la BD suele devolver decimales como strings
+        const ratingData = stats.ratings.find(r => Number(r.rating) === star);
+        // -----------------------
+
         return ratingData ? (ratingData.count / totalRated) * 100 : 0;
     };
 
@@ -110,26 +115,21 @@ export function Profile() {
         return maxCount > 0 ? (count / maxCount) * 100 : 0;
     };
 
+    
+
     // if (loading) return <div className="container" style={{padding:'50px', textAlign:'center'}}>Cargando perfil...</div>;
     if (loading) return <div>Cargando...</div>;
 
     return (
         <div className="container">
-            <header>
-                <NavigationHeaderModal />
-                <button className="back-button" type="button" onClick={() => navigate(-1)}> ← Volver </button>
-                <SettingsModal />
-            </header>
+            <Navbar />
 
             <div className="profile-hero">
                 <div className="profile-sidebar">
-                    <div className="profile-avatar">
-                        {user?.username.substring(0, 2).toUpperCase()}
-                    </div>
+                    
                     <div>
                         <h1 className="profile-username">
                             {user?.username}
-                            <span className="username-icon">🔗</span>
                         </h1>
                         <button className="btn-edit-profile" onClick={() => navigate('/settings')}>
                             Editar Perfil

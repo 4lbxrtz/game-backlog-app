@@ -90,6 +90,7 @@ header {
 .greeting {
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 69px;
     padding: 0 10px;
     width: 100%;
 }
@@ -181,7 +182,8 @@ header {
 }
 
 .game-grid {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 15px;
     width: 100%;
@@ -209,6 +211,8 @@ header {
     font-size: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    flex: 0 0 150px;
+    min-width: 150px;
 }
 
 .game-title {
@@ -304,6 +308,8 @@ header {
 
 .backlog-section {
     grid-column: 1 / -1;
+    margin-bottom: 0;
+    width: 100%;
 }
 
 @media (max-width: 968px) {

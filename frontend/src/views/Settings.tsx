@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; // Asumo que tienes este hook
 import { authService } from '../services/authService';
 import './Settings.css';
-import NavigationHeaderModal from '../components/NavigationHeaderModal';
-import SettingsModal from '../components/SettingsModal';
 import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
 
 export function Settings() {
     const { user, logout } = useAuth(); // Asumo que useAuth expone logout
@@ -85,10 +84,7 @@ export function Settings() {
 
     return (
         <div className="container">
-            <header>
-                <NavigationHeaderModal />
-                <SettingsModal />
-            </header>
+            <Navbar />
 
             <div className="page-header">
                 <h1 className="page-title">Configuración</h1>

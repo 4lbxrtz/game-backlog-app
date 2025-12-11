@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getGameDetails, searchIGDB } from "../services/igdbService";
-import { getCountRatings, searchGamesInDatabase } from "../models/gameModel";
+import { getCountRatings, getTrendingGamesFromDB, searchGamesInDatabase } from "../models/gameModel";
 import {
   gameExists,
   storeGameMetadata,
@@ -23,10 +23,10 @@ export async function searchGamesController(req: Request, res: Response) {
   try {
     const query = req.query.q as string;
 
-    if (!query || query.trim().length < 2) {
+    if (!query || query.trim().length < 0) {
       return res
         .status(400)
-        .json({ error: "Search query required (min 2 characters)" });
+        .json({ error: "Search query required" });
     }
 
     // 1. Search in database first
@@ -284,5 +284,15 @@ export async function getUserProfileController(req: Request, res: Response) {
   } catch (error) {
     console.error("Profile stats error:", error);
     res.status(500).json({ error: "Failed to fetch profile stats" });
+  }
+}
+
+export async function getTrendingGamesController(req: Request, res: Response) {
+  try {
+    const games = await getTrendingGamesFromDB();
+    res.json(games);
+  } catch (error) {
+    console.error("Trending games error:", error);
+    res.status(500).json({ error: "Failed to fetch trending games" });
   }
 }

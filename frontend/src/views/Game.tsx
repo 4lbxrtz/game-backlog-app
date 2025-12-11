@@ -13,6 +13,7 @@ import './Game.css'
 import BarCountModal from '../components/BarCountModal'
 import SettingsModal from '../components/SettingsModal'
 import { Footer } from '../components/Footer'
+import { Navbar } from '../components/Navbar'
 
 
 interface Game {
@@ -75,11 +76,6 @@ function Game() {
 
 
     // Helper to format dates (e.g., "2024-01-15" -> "Enero 2024")
-    const formatDate = (dateStr?: string) => {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-    }
 
     const formatDateOnly = (dateStr?: string) => {
         if (!dateStr) return ''
@@ -95,10 +91,10 @@ function Game() {
     // Helper to format date range
     const renderDateRange = (start?: string, end?: string) => {
         if (!start && !end) return '';
-        if (start && !end) return `Desde ${formatDate(start)}`;
-        if (!start && end) return `Finalizado en ${formatDate(end)}`;
-        return `${formatDate(start)} - ${formatDate(end)}`;
-    }
+        if (start && !end) return `Desde ${formatDateOnly(start)}`;
+        if (!start && end) return `Finalizado en ${formatDateOnly(end)}`;
+        return `${formatDateOnly(start)} - ${formatDateOnly(end)}`;
+    };
 
     useEffect(() => {
         async function fetchData() {
@@ -218,11 +214,9 @@ function Game() {
 
     return (
     <div className="container">
-        <header>
-            <NavigationHeaderModal/>
-            <button className="back-button" type="button" onClick={handleBack}> ← Volver </button>
-            <SettingsModal />
-        </header>
+        <Navbar leftSlot={<button className="back-button" type="button" onClick={handleBack}>← Volver</button>} />
+
+
 
         <div className="game-hero">
             <div className="cover-section">
@@ -283,10 +277,10 @@ function Game() {
                             <div className="log-card" key={log.id}>
                                 <div className="log-header">
                                     <div>
-                                        <div className="log-title">{log.title}</div>
                                         <div className="log-date">
                                             {renderDateRange(log.start_date, log.end_date)}
                                         </div>
+                                        <div className="log-title">{log.title}</div>
                                     </div>
                                     
                                     {/* NEW: Edit/Delete Buttons */}
