@@ -1,19 +1,26 @@
-// ...existing code...
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 let router: any; // will import after mocks are set up
 
-// Create mocks BEFORE importing the router so the module uses the mocked functions
+// 1. Create mocks for ALL controllers used in the router
 const registerMock = vi.fn();
 const loginMock = vi.fn();
 const getDashboardMock = vi.fn();
+// New mocks for the added features
+const updateProfileMock = vi.fn();
+const updatePasswordMock = vi.fn();
+const deleteAccountMock = vi.fn();
+
 const authenticateMock = vi.fn((req: any, res: any, next: any) => next());
 
-// Use non-hoisted mocks so they run when we import the module later
+// 2. Update the module mock to export the new functions
 vi.doMock("../controllers/authController", () => ({
   register: registerMock,
   login: loginMock,
   getDashboard: getDashboardMock,
+  updateProfileController: updateProfileMock, // <--- Added
+  updatePasswordController: updatePasswordMock, // <--- Added
+  deleteAccountController: deleteAccountMock, // <--- Added
 }));
 
 vi.doMock("../middleware/auth", () => ({
@@ -63,5 +70,42 @@ describe("authRoutes", () => {
     expect(stackHandles[0]).toBe(authenticateMock);
     expect(stackHandles[stackHandles.length - 1]).toBe(getDashboardMock);
   });
+
+  // --- NEW TESTS FOR NEW ROUTES ---
+
+  it("defines PUT /profile route protected by authenticate middleware", () => {
+    const routeLayers = (router as any).stack.filter((l: any) => l.route);
+    const route = routeLayers.find((r: any) => r.route.path === "/profile");
+
+    expect(route).toBeDefined();
+    expect(route.route.methods.put).toBeTruthy();
+
+    const stackHandles = route.route.stack.map((s: any) => s.handle);
+    expect(stackHandles[0]).toBe(authenticateMock);
+    expect(stackHandles[stackHandles.length - 1]).toBe(updateProfileMock);
+  });
+
+  it("defines PUT /password route protected by authenticate middleware", () => {
+    const routeLayers = (router as any).stack.filter((l: any) => l.route);
+    const route = routeLayers.find((r: any) => r.route.path === "/password");
+
+    expect(route).toBeDefined();
+    expect(route.route.methods.put).toBeTruthy();
+
+    const stackHandles = route.route.stack.map((s: any) => s.handle);
+    expect(stackHandles[0]).toBe(authenticateMock);
+    expect(stackHandles[stackHandles.length - 1]).toBe(updatePasswordMock);
+  });
+
+  it("defines DELETE /account route protected by authenticate middleware", () => {
+    const routeLayers = (router as any).stack.filter((l: any) => l.route);
+    const route = routeLayers.find((r: any) => r.route.path === "/account");
+
+    expect(route).toBeDefined();
+    expect(route.route.methods.delete).toBeTruthy();
+
+    const stackHandles = route.route.stack.map((s: any) => s.handle);
+    expect(stackHandles[0]).toBe(authenticateMock);
+    expect(stackHandles[stackHandles.length - 1]).toBe(deleteAccountMock);
+  });
 });
-// ...existing code...

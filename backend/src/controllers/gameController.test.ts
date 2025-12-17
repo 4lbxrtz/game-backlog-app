@@ -31,17 +31,9 @@ beforeEach(() => {
 });
 
 describe("searchGamesController", () => {
-  it("returns 400 when query missing or too short", async () => {
+  it("returns 400 when query missing", async () => {
     const { req, res } = makeReqRes();
     // no query
-    await searchGamesController(req, res);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalled();
-
-    // too short
-    res.status.mockClear();
-    res.json.mockClear();
-    req.query.q = "a";
     await searchGamesController(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalled();

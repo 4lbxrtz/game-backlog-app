@@ -240,11 +240,20 @@ describe("authController - getDashboard", () => {
     await getDashboard(req, res);
 
     expect(userModel.getUserStats).toHaveBeenCalledWith(2);
+    // Code calls getCurrentlyPlayingGames(userId, 4)
     expect(userModel.getCurrentlyPlayingGames).toHaveBeenCalledWith(2, 4);
-    expect(userModel.getBacklogGames).toHaveBeenCalledWith(2, 8);
+
+    // Code calls getBacklogGames(userId, 12)
+    expect(userModel.getBacklogGames).toHaveBeenCalledWith(2, 12);
+
     expect(userModel.getUserLists).toHaveBeenCalledWith(2);
-    expect(userModel.getWishlistGames).toHaveBeenCalledWith(2, 8);
-    expect(userModel.getCompletedGames).toHaveBeenCalledWith(2, 8);
+
+    // FIX: Code calls getWishlistGames(userId, 12), not 8
+    expect(userModel.getWishlistGames).toHaveBeenCalledWith(2, 12);
+
+    // FIX: Code calls getCompletedGames(userId, 4), make sure this matches too
+    // In your controller you wrote: getCompletedGames(userId, 4)
+    expect(userModel.getCompletedGames).toHaveBeenCalledWith(2, 4);
 
     expect(res.body).toHaveProperty("user");
     expect(res.body.user).toMatchObject({

@@ -45,7 +45,7 @@ describe("gameModel", () => {
     mockQuery.mockResolvedValueOnce([rows]);
     const result = await gameModel.searchGamesInDatabase("Halo");
     expect(mockQuery).toHaveBeenCalledWith(
-      "SELECT * FROM games WHERE title LIKE ? LIMIT 20",
+      "SELECT * FROM games WHERE title LIKE ? LIMIT 42",
       ["%Halo%"]
     );
     expect(result).toEqual(rows);

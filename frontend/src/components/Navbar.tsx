@@ -79,7 +79,7 @@ export function Navbar({ leftSlot }: { leftSlot?: ReactNode }) {
                                         ⚙️ Configuración
                                     </Link>
                                     <div className="dropdown-divider"></div>
-                                    <button className="dropdown-item logout" onClick={handleLogout}>
+                                    <button className="dropdown-item logout" id="logout" onClick={handleLogout}>
                                         🚪 Cerrar Sesión
                                     </button>
                                 </div>
