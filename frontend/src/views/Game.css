@@ -82,9 +82,8 @@ header {
     gap: 15px;
 }
 
-.game-cover-large {
+.game-cover {
     width: 100%;
-    aspect-ratio: 3/4;
     background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
     border-radius: 12px;
     display: flex;
@@ -93,6 +92,30 @@ header {
     color: #4a4a4a;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.game-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.game-cover-large {
+    width: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 12px;
+    color: #4a4a4a;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    line-height: 0;
+}
+
+.game-cover-large img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
 }
 
 .my-rating-box {

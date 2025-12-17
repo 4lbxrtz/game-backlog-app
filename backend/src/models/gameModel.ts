@@ -31,7 +31,7 @@ export async function gameExists(igdbId: number): Promise<boolean> {
 
 export async function searchGamesInDatabase(query: string): Promise<Game[]> {
   const [rows] = await pool.query<RowDataPacket[]>(
-    "SELECT * FROM games WHERE title LIKE ? LIMIT 40",
+    "SELECT * FROM games WHERE title LIKE ? LIMIT 42",
     [`%${query}%`]
   );
   return rows as Game[];
@@ -174,7 +174,7 @@ export async function updateUserRating(
 
 // backend/src/models/gameModel.ts
 
-export async function getTrendingGamesFromDB(limit: number = 40): Promise<any[]> {
+export async function getTrendingGamesFromDB(limit: number = 42): Promise<any[]> {
   const [rows] = await pool.query<RowDataPacket[]>(`
     SELECT g.id, g.title, g.cover_url, COUNT(ug.user_id) as popularity
     FROM games g

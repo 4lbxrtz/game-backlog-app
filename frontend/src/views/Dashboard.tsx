@@ -154,7 +154,7 @@ function Dashboard() {
                                     </div>
                                 ))
                             ) : (
-                                <div style={{ padding: '20px', color: '#666' }}>No hay juegos en progreso. <a href="/search">Añade uno!</a></div>
+                                <div style={{ padding: '20px', color: '#666' }}>No hay juegos en progreso. <a href="/search">¡Añade juegos!</a></div>
                             )}
                         </div>
                     </div>
@@ -176,7 +176,7 @@ function Dashboard() {
                                     </div>
                                 ))
                             ) : (
-                                <div style={{ padding: '20px', color: '#666' }}>Aún no has completado juegos.</div>
+                                <div style={{ padding: '20px', color: '#666' }}>Aún no has completado juegos. <a href="/search">¡Añade juegos!</a> </div>
                             )}
                         </div>
                     </div>
@@ -216,7 +216,7 @@ function Dashboard() {
                 </div>
                 <div className="game-grid">
                     {data.backlog.length > 0 ? (
-                        data.backlog.slice(0, 10).map(game => (
+                        data.backlog.slice(0, 12).map(game => (
                             <div key={game.id} className="game-card" onClick={() => navigate(`/game/${game.id}`)}>
                                 <div className="game-cover" style={{backgroundImage: game.cover_url ? `url(${game.cover_url})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center'}}>
                                     {!game.cover_url && 'Sin portada'}
@@ -225,7 +225,7 @@ function Dashboard() {
                             </div>
                         ))
                     ) : (
-                        <div style={{ padding: '20px', color: '#666' }}>Tu backlog está vacío. <a href="/search">Añade juegos!</a></div>
+                        <div style={{ padding: '20px', color: '#666' }}>Tu backlog está vacío. <a href="/search">¡Añade juegos!</a></div>
                     )}
                 </div>
             </div>
@@ -238,7 +238,7 @@ function Dashboard() {
                 </div>
                 <div className="game-grid">
                     {data.wishlist.length > 0 ? (
-                        data.wishlist.slice(0, 10).map(game => (
+                        data.wishlist.slice(0, 12).map(game => (
                             <div key={game.id} className="game-card" onClick={() => navigate(`/game/${game.id}`)}>
                                 <div className="game-cover" style={{backgroundImage: game.cover_url ? `url(${game.cover_url})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center'}}>
                                     {!game.cover_url && 'Sin portada'}
@@ -247,7 +247,7 @@ function Dashboard() {
                             </div>
                         ))
                     ) : (
-                        <div style={{ padding: '20px', color: '#666' }}>Tu wishlist está vacía. <a href="/search">Añade uno!</a></div>
+                        <div style={{ padding: '20px', color: '#666' }}>Tu wishlist está vacía. <a href="/search">¡Añade juegos!</a></div>
                     )}
                 </div>
             </div>

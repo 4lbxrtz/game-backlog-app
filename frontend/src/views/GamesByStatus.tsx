@@ -86,6 +86,35 @@ export function GamesByStatus() {
         }
     };
 
+    const renderStars = (rating: number) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+
+        // Add Full Stars
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<span key={`full-${i}`} className="star full">★</span>);
+        }
+
+        // Add Half Star
+        if (hasHalfStar) {
+            stars.push(
+                <span key="half" className="star half" style={{position:'relative'}}>
+                    <span style={{color: '#444', position:'absolute', left:0}}>★</span> {/* Background for half */}
+                    <span style={{color: '#ff4d6d', position:'relative', zIndex:1, clipPath: 'inset(0 50% 0 0)'}}>★</span>
+                </span>
+            );
+        }
+
+        // Fill remaining with empty stars (optional, usually looks better with just filled ones or grey ones)
+        const emptyStars = 5 - Math.ceil(rating);
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<span key={`empty-${i}`} className="star empty">★</span>);
+        }
+
+        return stars;
+    };
+
     return (
         <div className="container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Navbar />
@@ -130,43 +159,54 @@ export function GamesByStatus() {
                 </div>
 
                 {/* GRID DE JUEGOS */}
-                {loading ? (
-                    <div style={{textAlign: 'center', padding: '50px'}}>Cargando juegos...</div>
-                ) : games.length === 0 ? (
-                    <div style={{textAlign: 'center', padding: '50px', color: '#666'}}>
-                        No tienes juegos en la categoría <strong>{activeTab}</strong>.
-                    </div>
-                ) : (
-                    <div className={`games-grid ${viewMode === 'list' ? 'view-list' : ''}`}>
-                        {getSortedGames().map(game => (
-                            <div 
-                                key={game.id} 
-                                className="game-card"
-                                onClick={() => navigate(`/game/${game.id}`)}
-                                style={{cursor: 'pointer'}}
-                            >
-                                <div className="game-cover">
-                                    {game.cover_url ? (
-                                        <img 
-                                            src={game.cover_url} 
-                                            alt={game.title} 
-                                            style={{width: '100%', height: '100%', objectFit: 'cover'}} 
-                                        />
-                                    ) : (
-                                        <div style={{
-                                            width: '100%', height: '100%', 
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                                            background: '#333'
-                                        }}>
-                                            🎮
-                                        </div>
-                                    )}
+            {loading ? (
+                <div style={{textAlign: 'center', padding: '50px'}}>Cargando juegos...</div>
+            ) : games.length === 0 ? (
+                <div style={{textAlign: 'center', padding: '50px', color: '#666'}}>
+                    No tienes juegos en la categoría <strong>{activeTab}</strong>.
+                </div>
+            ) : (
+                <div className={`games-grid ${viewMode === 'list' ? 'view-list' : ''}`}>
+                {getSortedGames().map(game => (
+                    <div 
+                        key={game.id} 
+                        className="game-card"
+                        onClick={() => navigate(`/game/${game.id}`, { state: { from: 'status', status: activeTab } })}
+                        style={{cursor: 'pointer'}}
+                    >
+                        <div className="game-cover">
+                            {game.cover_url ? (
+                                <img 
+                                    src={game.cover_url} 
+                                    alt={game.title} 
+                                    style={{width: '100%', height: '100%', objectFit: 'cover'}} 
+                                />
+                            ) : (
+                                <div style={{
+                                    width: '100%', height: '100%', 
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                                    background: '#333'
+                                }}>
+                                    🎮
                                 </div>
-                                <div className="game-title">{game.title}</div>
-                            </div>
-                        ))}
+                            )}
+
+                            {/* --- HOVER RATING BADGE --- */}
+                            {game.personal_rating && game.personal_rating > 0 && (
+                                <div className="hover-rating-badge">
+                                    <div className="stars-container">
+                                        {renderStars(Number(game.personal_rating))}
+                                    </div>
+                                </div>
+                            )}
+                            {/* ------------------------- */}
+
+                        </div>
+                        <div className="game-title">{game.title}</div>
                     </div>
-                )}
+                ))}
+            </div>
+            )}
             </div>
 
             {/* Insert Footer at the bottom */}

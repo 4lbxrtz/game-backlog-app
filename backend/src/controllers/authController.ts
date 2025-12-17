@@ -147,10 +147,10 @@ export async function getDashboard(req: Request, res: Response): Promise<void> {
       await Promise.all([
         getUserStats(userId),
         getCurrentlyPlayingGames(userId, 4),
-        getBacklogGames(userId, 8),
+        getBacklogGames(userId, 12),
         getUserLists(userId),
-        getWishlistGames(userId, 8),
-        getCompletedGames(userId, 8),
+        getWishlistGames(userId, 12),
+        getCompletedGames(userId, 4),
       ]);
 
     res.json({

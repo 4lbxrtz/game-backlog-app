@@ -25,7 +25,7 @@ export function Navbar({ leftSlot }: { leftSlot?: ReactNode }) {
                     {/* 1. LOGO */}
                     <Link to="/dashboard" className="navbar-logo">
                         <span className="logo-icon">🎮</span>
-                        <span className="logo-text">GameTracker</span>
+                        <span className="logo-text">GameBacklog</span>
                     </Link>
 
                     {/* 2. CENTER LINKS (Desktop Only - Hidden on Mobile via CSS) */}

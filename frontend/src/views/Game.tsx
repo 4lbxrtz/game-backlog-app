@@ -8,10 +8,8 @@ import { LogModal } from '../components/LogModal'
 import { ListSelectorModal } from '../components/ListSelectorModal';
 import RatingModal from '../components/RatingModal';
 import GameRatingModal from '../components/GameRatingModal';
-import NavigationHeaderModal from '../components/NavigationHeaderModal'
 import './Game.css'
 import BarCountModal from '../components/BarCountModal'
-import SettingsModal from '../components/SettingsModal'
 import { Footer } from '../components/Footer'
 import { Navbar } from '../components/Navbar'
 
@@ -115,10 +113,8 @@ function Game() {
                 try {
                     const status = await gameService.getStatus(Number(id))
                     setUserStatus(status)
-                    console.log('User status fetched:', status)
-                } catch (error) {
+                } catch {
                     // If 404 or error, it usually means game is not in collection
-                    console.log('Game not in user collection yet.', error)
                     setUserStatus(null) 
                 }
                 // 4. Fetch User Rating
@@ -128,14 +124,9 @@ function Game() {
                 // 5. Fetch Game Rating
                 const rating = await gameService.getRating(Number(id))
                 setRating(rating);
-                console.log('Game rating fetched:', rating)
-                console.log('Average rating:', rating ? rating.average : 'N/A')
-                console.log("Rating count:", rating ? rating.count : 'N/A')
-
                 // 6. Fetch Count of Ratings
                 const countRatingsData = await gameService.getCountRatings(Number(id))
                 setCountRatings(countRatingsData);
-                console.log('Count of ratings fetched:', countRatingsData)
             } catch (error) {
                 console.error('Error loading game data:', error)
             } finally {
@@ -205,7 +196,10 @@ function Game() {
     const fromSearch = (location.state as FromSearchState | null) ?? null
 
     const handleBack = () => {
-        if (fromSearch?.from === 'search') {
+        if (location.state?.from === 'status') {
+            const status = location.state?.status || 'Backlog'
+            navigate(`/status/${status}`)
+        } else if (fromSearch?.from === 'search') {
             navigate('/search', { state: { query: fromSearch.query ?? '', results: fromSearch.results ?? [] } })
         } else {
             navigate(-1)
@@ -220,7 +214,7 @@ function Game() {
 
         <div className="game-hero">
             <div className="cover-section">
-                <div className="game-cover"><img src={game?.cover_url} alt={game?.title} /></div>
+                <div className="game-cover-large"><img src={game?.cover_url} alt={game?.title} /></div>
                 <div className="rating-display">
                         <div className="rating-label">Tu valoración</div>
                         <div className="rating-value">{userRating !== null ? Number(userRating).toFixed(1) : "N/A"}</div>

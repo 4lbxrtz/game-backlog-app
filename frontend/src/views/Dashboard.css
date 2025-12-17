@@ -14,6 +14,11 @@ body {
     overflow-x: hidden;
 }
 
+:root {
+    --cover-width: 180px;
+    --card-gap: 18px;
+}
+
 .container {
     max-width: 1300px;
     margin: 0 auto;
@@ -150,7 +155,6 @@ header {
 
 .section {
     margin-bottom: 60px;
-    padding: 0 10px;
     width: 100%;
 }
 
@@ -184,22 +188,21 @@ header {
 .game-grid {
     display: flex;
     flex-wrap: wrap;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 15px;
+    gap: var(--card-gap);
     width: 100%;
+    align-content: flex-start;
 }
 
 .game-card {
     cursor: pointer;
     transition: transform 0.3s ease;
-}
-
-.game-card:hover {
-    transform: translateY(-5px);
+    width: var(--cover-width);
+    height: fit-content;
+    flex: 0 0 auto;
 }
 
 .game-cover {
-    width: 100%;
+    width: var(--cover-width);
     aspect-ratio: 3/4;
     background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
     border-radius: 8px;
@@ -211,8 +214,6 @@ header {
     font-size: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    flex: 0 0 150px;
-    min-width: 150px;
 }
 
 .game-title {
@@ -224,8 +225,7 @@ header {
 }
 
 .main-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
     gap: 30px;
     padding: 0;
     margin-bottom: 60px;
@@ -236,6 +236,8 @@ header {
     display: flex;
     flex-direction: column;
     gap: 60px; /* Espacio vertical entre Jugando y Completados */
+    width: 100%;
+    flex: 1;
 }
 
 /* IMPORTANTE: Resetear márgenes dentro de las columnas para que el gap controle el espacio */
@@ -260,7 +262,7 @@ header {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     height: fit-content;
     margin-bottom: 0;
-    width: 100%;
+    flex: 0 0 calc(33.333% - 20px);
     box-sizing: border-box;
 }
 
@@ -343,6 +345,11 @@ header {
 }
 
 @media (max-width: 568px) {
+    :root {
+        --cover-width: 150px;
+        --card-gap: 12px;
+    }
+
     body {
         padding: 10px 0;
         overflow-x: visible;
@@ -423,7 +430,7 @@ header {
         flex-wrap: nowrap;
         overflow-x: scroll;
         overflow-y: hidden;
-        gap: 10px;
+        gap: var(--card-gap);
         padding-bottom: 10px;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
@@ -436,9 +443,9 @@ header {
     }
 
     .game-card {
-        flex: 0 0 135px;
-        min-width: 135px;
-        max-width: 135px;
+        flex: 0 0 var(--cover-width);
+        min-width: var(--cover-width);
+        max-width: var(--cover-width);
         scroll-snap-align: start;
     }
 

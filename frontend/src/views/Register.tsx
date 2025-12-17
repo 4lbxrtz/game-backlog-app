@@ -96,7 +96,7 @@ export default function Register() {
             <div className="logo-section">
                 <div className="logo">
                     <span className="logo-icon">🎮</span>
-                    <span>GameTracker</span>
+                    <span>GameBacklog</span>
                 </div>
                 <p className="logo-tagline">Organiza tu biblioteca de videojuegos</p>
             </div>

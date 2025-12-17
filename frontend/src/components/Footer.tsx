@@ -6,7 +6,7 @@ export function Footer() {
             <div className="footer-content">
                 <div className="footer-section brand">
                     <span className="footer-logo">
-                        <span className="logo-icon">🎮</span> GameTracker
+                        <span className="logo-icon">🎮</span> GameBacklog
                     </span>
                     <span className="footer-version">v1.0.0</span>
                 </div>
@@ -35,7 +35,7 @@ export function Footer() {
                 </div>
 
                 <div className="footer-section copyright">
-                    &copy; {new Date().getFullYear()} GameTracker
+                    &copy; {new Date().getFullYear()} GameBacklog
                 </div>
             </div>
         </footer>
