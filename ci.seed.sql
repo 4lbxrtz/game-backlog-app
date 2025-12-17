@@ -105,4 +105,4 @@ insert into games (id, title, cover_url, description, release_date) values
 - Undertaker: An abbess who was mandated to slay the Nightlord. Boasting impressive strength and faith, she sends enemies to the afterlife with ruthless efficiency.
 It also features the new Limveld enemy type, and a new area: Shifting Earth: The Great Hollow, a great cavity in the depths of Limveld. The hollow is strewn with exotic ruins and temples; sacred towers denoting the remains of an ancient people; and crystals that exude a cursed, life-draining miasma.', '2025-12-04');
 insert into users (username, email, password_hash) values
-('prueba', 'prueba@gmail.com', '$argon2id$v=19$m=65536,t=3,p=1$YFo4z0x4QTmFHEYVwZQyOA$+aGAGUif/rZdWxktnFDOTZo3qrBv3YTtEIqK0qX1t+M');
+('prueba', 'prueba@gmail.com', '$argon2id$v=19$m=65536,t=3,p=1$gBTld6Xp/fzaBK7hH9isgw$6NLpQSxiCjwq93I3XCuiFRnlJqTORHSLPFunQ8aCvCo');

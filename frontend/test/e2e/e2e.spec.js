@@ -13,7 +13,7 @@ describe('End-to-End Tests', () => {
   async function loginUser(driver) {
     await driver.get(`${BASE_URL}/login`);
     const email = await driver.wait(until.elementLocated(By.id("email")), 10000);
-    await email.sendKeys("tests@gmail.com");
+    await email.sendKeys("prueba@gmail.com");
     await driver.findElement(By.id("password")).sendKeys("123456789");
     
     const loginBtn = await driver.findElement(By.css(".btn-login"));
